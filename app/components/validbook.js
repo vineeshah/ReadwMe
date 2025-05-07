@@ -1,30 +1,38 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import dotenv from 'dotenv';
-dotenv.config();
-import { ChatOpenAI } from "@langchain/openai";
+// import dotenv from 'dotenv';
+// dotenv.config();
+import { ChatGroq } from "@langchain/groq";
+
+
+
 
 export default async function validbook(data) {
   const name = data.name;
   const author = data.author;
-//   if (!process.env.OPENAI_API_KEY) {
-//     console.error("Error: The OPENAI_API_KEY environment variable is missing or empty.");
-//     return false; 
+  
+//   if (!name || !author) {
+//     console.error("Missing title or author");
+//     return false;
 //   }
 
-  const model = new ChatOpenAI({
-    temperature: 0,
-    modelName: "gpt-3.5-turbo",
-    openAIApiKey: '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',
-  });
+//   const genAI = new GoogleGenerativeAI("AIzaSyC6btwppwl0ah6udYB24lhaJZHWQArKlhk");
+//   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const model = new ChatGroq({
+        model: "llama3-70b-8192",
+        temperature: 0,
+        apiKey: "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"
+    });
 
   const messages = [
-    new SystemMessage("Only respond with 'Yes' or 'No'."),
+    new SystemMessage("Only respond with 'Yes' or 'No'. If the book name is not specific or confusing, respond with 'retry'"),
     new HumanMessage(`Is '${name}' by '${author}' a valid book? Answer based on whether that book exists or not.`),
   ];
 
   try {
     const response = await model.invoke(messages);
-    return response.content.trim() === "Yes";
+    // const response = await model.generateContent("Only respond with 'Yes' or 'No'." + `Is '${name}' by '${author}' a valid book? Answer based on whether that book exists or not.`)
+    return response.content.trim();
   } catch (error) {
     console.error("Error validating book:", error);
     return false; 

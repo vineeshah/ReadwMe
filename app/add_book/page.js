@@ -7,26 +7,30 @@ function AddBookPage() {
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
   const { data: session } = useSession(); 
-  const userId = session.user.id;
 
   const handleSearch = async (e) => {
     e.preventDefault();
     const isValid = await validbook({ name: name, author: author }); 
-    if (isValid) {
+    if (isValid=="Yes") {
       try {
         const date = new Date().toISOString(); 
+        console.log(session.user)
+        const userId = session?.user?.id;
         const response = await fetch(`/api/requests`, {
           method: 'POST',
+          headers: {"Content-Type" : "application/json"},
           body: JSON.stringify({ name: name, author: author, userId: userId, publishDate: date }),
         });
         const data = await response.json();
         console.log('Book added:', data);
       } catch (error) {
         console.error(error);
-        alert('Error adding the book');
+        alert('Error adding the book in the book route');
       }
-    } else {
-      alert('Invalid book. Please check the details and try again.');
+    } else if(isValid=="No"){
+      alert('Invalid book. Please check the details and try again!');
+    }else{
+        alert('Be more specific or check spelling!')
     }
   };
 

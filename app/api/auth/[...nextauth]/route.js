@@ -16,6 +16,12 @@ export const authOptions = {
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
         }),
     ],
+    callbacks: {
+        async session({ session, user }) {
+          session.user.id = user.id;
+          return session;
+        }
+      },
     // pages: {
     //     error: '/login',
     // }, 

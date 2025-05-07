@@ -25,6 +25,6 @@ export async function postABook(data) {
     });
     return newBook;
   } catch (error) {
-    throw new Error("Failed to create book");
+    console.log(error)
   }
 }

@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/anthropic": "^0.3.20",
+    "@langchain/google-genai": "^0.2.5",
+    "@langchain/groq": "^0.2.2",
     "@langchain/openai": "^0.5.10",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@prisma/adapter-pg": "^6.6.0",
