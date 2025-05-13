@@ -1,12 +1,33 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Summariser() {
     const [file, setFile] = useState(null);
 
+    
+    // const [vector, setVector] = useState(null);
+    
+    // const embed = async(text) => {
+
+    //     const response = await openai.embeddings.create({
+    //         model: "text-embedding-3-small",
+    //         input: text,
+    //     });
+        
+    //     console.log("This is the vector:", response.data[0].embedding);
+    
+    
+    // }
+
+    // useEffect(() => {
+        
+    //     embed("This is an example paragraph that we want to embed.");
+    // }, []);
+
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
+
 
     const handleUploads = async () => {
         if (!file) {
@@ -23,7 +44,7 @@ export default function Summariser() {
         } catch (error) {
             console.error("Error uploading file:", error);
         }
-    };
+    }; 
 
     return (
         <div>
