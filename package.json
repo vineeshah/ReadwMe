@@ -17,6 +17,7 @@
     "@next-auth/prisma-adapter": "^1.0.7",
     "@prisma/adapter-pg": "^6.6.0",
     "dotenv": "^16.5.0",
+    "formidable": "^3.5.4",
     "langchain": "^0.3.24",
     "next": "15.3.1",
     "next-auth": "^4.24.11",

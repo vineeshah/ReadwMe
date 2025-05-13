@@ -161,7 +161,7 @@ export default function Home() {
                                 Delete
                               </button>
                               <button
-                                onClick={() => alert('Summarize functionality not implemented yet')}
+                                onClick={() => router.push(`/summarise`)}
                                 className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                               >
                                 Summarize
