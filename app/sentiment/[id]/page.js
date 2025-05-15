@@ -1,0 +1,100 @@
+"use client"
+import OpenAI from "openai";
+import { use, useState, useEffect } from "react";
+
+export default function senti({params}){
+    const [book, setBook] = useState(null)
+    const [link, setLink] = useState(null)
+    const [snippet, setSnippet] = useState(null) 
+    const [loading, setLoading] = useState(false)
+    const {id} = use(params);
+    
+    useEffect(() => {
+        const fetchData = async() => { 
+            const response = await fetch(`/api/requests/${id}`,{
+                method:"GET"
+            })
+            const data = await response.json();
+            setBook(data);
+        };
+        fetchData();   
+    }, [id])
+    
+    
+    const handleSearch = async () => {
+        if (book) {
+            try {
+                setLoading(true);
+                const result = await fetch(`/api/webscraper/`,{
+                    method:"POST",
+                    headers:{"Content-Type": "application/json"},
+                    body: JSON.stringify({book:book})
+                });
+                const data = await result.json();
+                setLink(data.firstLink);
+                setSnippet(data.title);
+            } catch (error) {
+                console.error("Error fetching link:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+    
+    return(
+        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="p-8">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Pop culture hub</h1>
+                    
+                    {book ? (
+                        <div className="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                            <p className="text-lg">
+                                <span className="font-semibold text-blue-800">{book.name}</span>
+                                <span className="text-gray-700"> by {book.author}</span>
+                            </p>
+                            
+                            <div className="mt-4 text-center">
+                                <button 
+                                    onClick={handleSearch}
+                                    disabled={loading}
+                                    className={`px-4 py-2 ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'} text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors`}
+                                >
+                                    {loading ? 'Searching...' : 'Find out latest tea about your book!'}
+                                </button>
+                            </div>
+                            
+                            {loading && (
+                                <div className="mt-4 text-center">
+                                    <p className="text-gray-600">Tea Time...</p>
+                                </div>
+                            )}
+                            
+                            {link && snippet && !loading && (
+                                <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
+                                    <h3 className="font-semibold text-lg text-gray-800 mb-2">Here ya go!:</h3>
+                                    
+                                    <div className="mb-3">
+                                        <p className="font-medium text-gray-700">Title:</p>
+                                        <p className="text-gray-600">{snippet}</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <p className="font-medium text-gray-700">Link:</p>
+                                        <a href={link} target="_blank" rel="noopener noreferrer" 
+                                           className="text-blue-600 hover:underline break-words">
+                                            {link}
+                                        </a>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <p className="text-center">Loading book information...</p>
+                    )}
+        
+                </div>
+            </div>
+        </div>
+    );
+}

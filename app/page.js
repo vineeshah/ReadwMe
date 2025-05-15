@@ -144,7 +144,7 @@ export default function Home() {
                             onClick={() => toggleDropdown(idx)}
                             className="inline-flex justify-center w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
                           >
-                            Actions
+                            Check this out!
                           </button>
                           {openDropdown === idx && (
                             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg">
@@ -161,16 +161,16 @@ export default function Home() {
                                 Delete
                               </button>
                               <button
-                                onClick={() => router.push(`/summarise`)}
+                                onClick={() => router.push(`/summarise/${book.id}`)}
                                 className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                               >
                                 Summarize
                               </button>
                               <button
-                                onClick={() => alert('Take Notes functionality not implemented yet')}
+                                onClick={() => router.push(`/sentiment/${book.id}`)}
                                 className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                               >
-                                Take Notes
+                                Sentiment Analysis
                               </button>
                             </div>
                           )}
