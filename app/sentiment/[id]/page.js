@@ -4,9 +4,11 @@ import { use, useState, useEffect } from "react";
 
 export default function senti({params}){
     const [book, setBook] = useState(null)
-    const [link, setLink] = useState(null)
-    const [snippet, setSnippet] = useState(null) 
+    // const [link, setLink] = useState(null)
+    // const [snippet, setSnippet] = useState(null) 
+    const[title, setTitle] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [screenshot, setScreenshot] = useState(null)
     const {id} = use(params);
     
     useEffect(() => {
@@ -31,8 +33,10 @@ export default function senti({params}){
                     body: JSON.stringify({book:book})
                 });
                 const data = await result.json();
-                setLink(data.firstLink);
-                setSnippet(data.title);
+                setTitle(data.titles)
+                setScreenshot(data.screenshot)
+                // setLink(data.firstLink);
+                // setSnippet(data.title);
             } catch (error) {
                 console.error("Error fetching link:", error);
             } finally {
@@ -70,21 +74,30 @@ export default function senti({params}){
                                 </div>
                             )}
                             
-                            {link && snippet && !loading && (
+                            {title && !loading && (
                                 <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
                                     <h3 className="font-semibold text-lg text-gray-800 mb-2">Here ya go!:</h3>
                                     
-                                    <div className="mb-3">
-                                        <p className="font-medium text-gray-700">Title:</p>
-                                        <p className="text-gray-600">{snippet}</p>
-                                    </div>
+                                    {screenshot && (
+                                        <div className="mb-5">
+                                            <p className="font-medium text-gray-700 mb-2">Search Results Screenshot:</p>
+                                            <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                                                <img 
+                                                    src={screenshot} 
+                                                    alt="Google Search Results" 
+                                                    className="w-full h-auto object-contain"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                     
-                                    <div>
-                                        <p className="font-medium text-gray-700">Link:</p>
-                                        <a href={link} target="_blank" rel="noopener noreferrer" 
-                                           className="text-blue-600 hover:underline break-words">
-                                            {link}
-                                        </a>
+                                    <div className="mb-3">
+                                        <p className="font-medium text-gray-700">Recent News:</p>
+                                        {title.map((item, index) => (
+                                            <p key={index} className="text-gray-600 mb-2 py-2 border-b border-gray-100">
+                                                {item}
+                                            </p>
+                                        ))}
                                     </div>
                                 </div>
                             )}

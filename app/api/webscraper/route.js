@@ -1,23 +1,37 @@
-import { getJson } from "serpapi";
+// import { getJson } from "serpapi";
 import { NextResponse } from "next/server";
+// import puppeteer from "puppeteer";
+
+import puppeteer from "puppeteer";
 
 export async function POST(req) {
-  const { book } = await req.json();
-
-  try {
-    const prompt = `recent pop culture news about ${book.name} from ${book.author}`;
-    const result = await getJson({
-      engine: "google",
-      q: prompt,
-      api_key: "9d9100525b33abc655ea787b9733f2c0140ba3f566b04169a68174f1b8fc619d",
+    const book = await req.json();
+  
+    const prompt = `recent pop culture news${book.name} from ${book.author}`;
+    const searchQuery = encodeURIComponent(prompt);
+    const url = `https://www.google.com/search?q=${searchQuery}`;
+  
+    const browser = await puppeteer.launch({headless:false});
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: 'networkidle2' });
+  
+    const screenshotBuffer = await page.screenshot({ 
+      fullPage: false,
+      encoding: 'binary'
     });
+    
+    const screenshot = screenshotBuffer.toString('base64');
 
-    const firstLink = result.organic_results?.[0]?.link;
-    const title = result.organic_results?.[0]?.title;
-
-    return NextResponse.json({ firstLink, title });
-  } catch (err) {
-    console.error("🛑 SerpAPI failed:", err);
-    return NextResponse.json({ error: "SerpAPI failed" }, { status: 500 });
-  }
+    const titles = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('h3')).map(el => el.innerText);
+    });
+  
+    await browser.close();
+    console.log(titles);
+    console.log(screenshot)
+  
+    return NextResponse.json({ 
+      titles,
+      screenshot: `data:image/png;base64,${screenshot}`
+    });
 }

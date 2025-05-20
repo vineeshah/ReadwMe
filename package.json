@@ -34,6 +34,7 @@
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.2.133",
     "pdftxt": "^0.1.0",
+    "puppeteer": "^24.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
