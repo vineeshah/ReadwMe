@@ -17,6 +17,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   books         Book[]
+  messages      Message[]
 }
 
 model Account {
@@ -62,4 +63,14 @@ model Book {
   userId       String
   publishDate  DateTime
   user User @relation(fields: [userId], references: [id])
+  messages     Message[]
+}
+model Message {
+  id        String   @id @default(cuid())
+  text      String
+  createdAt DateTime @default(now())
+  bookId    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
 }

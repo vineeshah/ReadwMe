@@ -172,6 +172,12 @@ export default function Home() {
                               >
                                 Sentiment Analysis
                               </button>
+                              <button
+                                onClick={() => router.push(`/chatroom/${book.id}`)}
+                                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                              >
+                                Chatroom
+                              </button>
                             </div>
                           )}
                         </div>
