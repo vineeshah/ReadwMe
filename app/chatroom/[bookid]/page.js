@@ -1,10 +1,10 @@
 "use client"
 import socket from "../../components/socket";
-import {use, useState, useEffect} from "react"
+import {use, useState, useEffect, useRef} from "react";
 import { useSession } from "next-auth/react";
 
 export default function chat({params}){
-    // Properly unwrap the params object using React.use()
+    // properly unwrap the params object using React.use()
     const resolvedParams = use(params);
     const bookId = resolvedParams.bookid; 
     const [messages, setMessages] = useState([])
@@ -12,13 +12,39 @@ export default function chat({params}){
     const { data: session } = useSession();//to get current user and info just in case
     const userId = session?.user?.id;
     const userName = session?.user?.name;
+    const messageContainerRef = useRef(null);
+    const [book,setBook] = useState()
+
+    useEffect(() => {
+        const fetchData = async() => { 
+            const response = await fetch(`/api/requests/${bookId}`,{
+                method:"GET"
+            })
+            const data = await response.json();
+            setBook(data);
+        };
+        fetchData();   
+    }, [])
+    
+    //to scroll to bottom of the chat
+    const scrollToBottom = () => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    };
+    
+    // Scroll to bottom when messages change
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+    
     useEffect(() => {
         socket.connect()
         socket.emit("join-book", { bookId, userId });//join everytime you go to this page however the server still exists
-
         const loadExistingMessages = async () => {
             try {
                 const response = await fetch(`/api/messages?bookId=${bookId}`);
+                ;
                 if (response.ok) {
                     const data = await response.json();
                     setMessages(data.messages);
@@ -30,7 +56,19 @@ export default function chat({params}){
         loadExistingMessages();
 
         socket.on("chat-message", (msg) => {//for if someone sends a message, this stays active the entire time the component is mounted, and never stops listening for the messages getting posted
-            setMessages((prev) => [...prev, msg]);
+            setMessages((prev) => {
+                // Check if this message is already in our messages array
+                // This prevents duplicate messages when sender receives their own message back
+                const isDuplicate = prev.some(existingMsg => 
+                    existingMsg.text === msg.text && 
+                    existingMsg.user.id === msg.user.id &&
+                    // Check if the timestamps are close (within 2 seconds)
+                    Math.abs(new Date(existingMsg.createdAt) - new Date(msg.createdAt)) < 2000
+                );
+                
+                if (isDuplicate) return prev;
+                return [...prev, msg];
+            });
         });
         socket.on("error", (errMsg) => {//just some light debugging
             alert(errMsg);
@@ -50,13 +88,13 @@ export default function chat({params}){
         }
         socket.emit("send-message", {bookId, userId, text:input})
 
-        // Create a unique temporary ID
+        // unique temporary ID
         const tempId = `temp-${Date.now()}`;
         
         setMessages((prev) => [
             ...prev,
             {
-              id: tempId, // Use unique ID instead of just "temp"
+              id: tempId, // unique ID instead of just "temp"
               text: input,
               createdAt: new Date().toISOString(),
               user: {
@@ -77,25 +115,31 @@ export default function chat({params}){
     
     return (
         <div className="p-4 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700 border-b pb-2">Book Chat: {bookId}</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700 border-b pb-2">Community Chat for: {book?.name}</h2>
     
-          <div className="h-[500px] overflow-y-scroll border p-4 rounded-lg mb-4 bg-gradient-to-b from-blue-50 to-white shadow-inner bg-opacity-90" 
-               style={{backgroundImage: "url('https://www.transparenttextures.com/patterns/paper.png')"}}>
+          <div 
+            ref={messageContainerRef}
+            className="h-[500px] overflow-y-scroll border p-4 rounded-lg mb-4 bg-gradient-to-b from-blue-50 to-white shadow-inner bg-opacity-90" 
+            style={{backgroundImage: "url('https://www.transparenttextures.com/patterns/paper.png')"}}>
             <div className="flex flex-col space-y-4 items-center">
               {messages.map((msg) => {
                 const isCurrentUser = msg.user.id === userId;
                 return (
                   <div key={msg.id} className="w-full max-w-[85%] mx-auto">
                     <div className={`flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'}`}>
-                      <div className="font-medium text-sm mb-1 px-2 text-gray-600">
+                      <div className={`font-semibold text-xs mb-1 px-2 ${
+                        isCurrentUser 
+                          ? 'text-blue-700' 
+                          : 'text-green-700'
+                      }`}>
                         {isCurrentUser ? 'You' : msg.user.name}
                       </div>
                       <div className={`px-4 py-3 rounded-2xl shadow-sm max-w-[90%]
                         ${isCurrentUser 
                           ? 'bg-blue-600 text-white' 
-                          : 'bg-white border border-gray-200'}`}>
+                          : 'bg-green-100 text-black border border-gray-200'}`}>
                         <div className="break-words">{msg.text}</div>
-                        <div className={`text-xs mt-1 text-right ${isCurrentUser ? 'text-blue-200' : 'text-gray-500'}`}>
+                        <div className={`text-xs mt-1 text-right ${isCurrentUser ? 'text-blue-200' : 'text-gray-600'}`}>
                           {formatTime(msg.createdAt)}
                         </div>
                       </div>
@@ -124,5 +168,5 @@ export default function chat({params}){
             </button>
           </div>
         </div>
-      );
+    );
 }

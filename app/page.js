@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AuthButton from "./components/AuthButton";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -133,7 +134,11 @@ export default function Home() {
                     </>
                   ) : (
                     <>
-                      <td className="border border-gray-300 px-4 py-2">{book.name}</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <Link href={`/book-features/${book.id}`} className="text-blue-400 hover:text-blue-300 underline">
+                          {book.name}
+                        </Link>
+                      </td>
                       <td className="border border-gray-300 px-4 py-2">{book.author}</td>
                       <td className="border border-gray-300 px-4 py-2">
                         {book.publishDate.slice(0, 10)}

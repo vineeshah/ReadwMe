@@ -1,6 +1,6 @@
-import {createServer} from "http"
-import { Server} from "socket.io"
-import prisma from "@/app/config/db"
+import {createServer} from "http";
+import { Server } from "socket.io";
+import prisma from "../config/db.js";
 
 const httpserver = createServer()//everytime you call this route this server will be created fresh with no memory of past server, which diminishes everytime you ctrl+c 
 const io = new Server(httpserver, {//for conecting to a new server for websocket-ing
@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
 
     socket.on("send-message", async({bookId,userId, text}) => {
         try{
-            const message = await prisma.Message.create({
+            const message = await prisma.message.create({
                 data: {
                     text,
                     bookId,

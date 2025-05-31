@@ -13,7 +13,7 @@ export async function GET(request) {
     }
     
     try {
-        const messages = await prisma.Message.findMany({
+        const messages = await prisma.message.findMany({
             where: {
                 bookId: bookId,
             },
