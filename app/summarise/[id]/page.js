@@ -25,7 +25,6 @@ export default function summariser({params}){
         
         setLoading(true);
         const pr = `with ${book.name} from ${book.author}in context, answer the following prompt from the user: ${text}`;
-        setPrompt(pr)
         
         try {
             const res = await fetch("/api/summariser", {
@@ -41,6 +40,7 @@ export default function summariser({params}){
             setResponse("Sorry, there was an error processing your request.");
         } finally {
             setLoading(false);
+            setPrompt("")
         }
     }
     

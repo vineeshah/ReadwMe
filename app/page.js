@@ -152,7 +152,7 @@ export default function Home() {
                             Check this out!
                           </button>
                           {openDropdown === idx && (
-                            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg">
+                            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-50">
                               <button
                                 onClick={() => handleUpdate(idx, book)}
                                 className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"

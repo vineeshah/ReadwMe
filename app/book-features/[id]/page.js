@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { FaBook, FaChartBar, FaComments, FaArrowLeft } from 'react-icons/fa';
 
 export default function book({params}){
     const router = useRouter();
@@ -34,7 +33,7 @@ export default function book({params}){
                     onClick={() => router.back()} 
                     className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6 transition-colors duration-200"
                 >
-                    <FaArrowLeft className="mr-2" /> Back to Books
+                   Back to Books
                 </button>
                 
                 {isLoading ? (
@@ -46,7 +45,7 @@ export default function book({params}){
                     <>
                         <div className="mb-10 bg-white rounded-xl shadow-xl overflow-hidden">
                             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-6 px-8">
-                                <h1 className="text-4xl font-bold mb-2">{book.title}</h1>
+                                <h1 className="text-4xl font-bold mb-2">{book.name}</h1>
                                 <h2 className="text-xl opacity-90 font-light">by {book.author}</h2>
                             </div>
                             <div className="p-6">
@@ -76,7 +75,6 @@ export default function book({params}){
                                     <div className="p-1 bg-indigo-500 w-full"></div>
                                     <div className="p-6 text-center">
                                         <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <FaBook className="text-indigo-600 text-2xl" />
                                         </div>
                                         <div className="text-xl font-semibold text-gray-800 mb-3">Summarize</div>
                                         <p className="text-gray-600 text-sm mb-4">Generate a comprehensive summary of key points and themes in the book</p>
@@ -93,7 +91,7 @@ export default function book({params}){
                                     <div className="p-1 bg-purple-500 w-full"></div>
                                     <div className="p-6 text-center">
                                         <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <FaChartBar className="text-purple-600 text-2xl" />
+                                           
                                         </div>
                                         <div className="text-xl font-semibold text-gray-800 mb-3">Sentiment Analysis</div>
                                         <p className="text-gray-600 text-sm mb-4">Understand the emotional tone and mood throughout the book</p>
@@ -110,7 +108,7 @@ export default function book({params}){
                                     <div className="p-1 bg-blue-500 w-full"></div>
                                     <div className="p-6 text-center">
                                         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <FaComments className="text-blue-600 text-2xl" />
+                                            
                                         </div>
                                         <div className="text-xl font-semibold text-gray-800 mb-3">Chatroom</div>
                                         <p className="text-gray-600 text-sm mb-4">Discuss, ask questions, and explore deeper insights about the book</p>

@@ -1,5 +1,4 @@
 "use client"
-import OpenAI from "openai";
 import { use, useState, useEffect } from "react";
 
 export default function senti({params}){
