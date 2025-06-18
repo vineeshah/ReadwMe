@@ -17,11 +17,15 @@ export const authOptions = {
         }),
     ],
     callbacks: {
+        async signIn({ user, account, profile }) {
+          // Allow all users
+          return true;
+        },
         async session({ session, user }) {
           session.user.id = user.id;
           return session;
-        }
-      },
+        },
+    },
     // pages: {
     //     error: '/login',
     // }, 

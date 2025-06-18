@@ -1,8 +1,17 @@
 import prisma from "@/app/config/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+
 
 export async function getAllBooks() {
   try {
+    const session = await getServerSession(authOptions); 
+    const userId = session?.user?.id;
+    console.log(userId)
     const books = await prisma.book.findMany({
+      where:{
+        userId:userId
+      },
       orderBy: {
         publishDate: "desc",
       },

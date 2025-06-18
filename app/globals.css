@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, synthwave;
+}
 
 :root {
   --background: #ffffff;
@@ -36,4 +39,20 @@ a {
 
 a:hover {
   color: var(--secondary-color);
+}
+
+/* Add at the end of your globals.css file */
+.theme-synthwave {
+  --primary: hsl(var(--p)) !important;
+  --background: hsl(var(--b1)) !important;
+  color-scheme: dark;
+}
+
+html[data-theme="synthwave"] {
+  color-scheme: dark;
+}
+
+/* Force specific theme colors if needed */
+.synthwave-theme * {
+  border-color: inherit;
 }

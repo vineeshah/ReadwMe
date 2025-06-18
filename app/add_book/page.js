@@ -22,6 +22,9 @@ function AddBookPage() {
           body: JSON.stringify({ name: name, author: author, userId: userId, publishDate: date }),
         });
         const data = await response.json();
+        alert("Book Added!!")
+        setAuthor("")
+        setName("")
         console.log('Book added:', data);
       } catch (error) {
         console.error(error);
@@ -35,39 +38,48 @@ function AddBookPage() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="max-w-lg mx-auto p-8 bg-gradient-to-r from-blue-50 to-blue-100 shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold text-center text-blue-700 mb-6">Add a New Book</h2>
-      <div className="mb-6">
-        <label className="block text-gray-800 font-semibold mb-2">
-          Book Name:
-        </label>
-        <input
-          type="text"
-          placeholder="Enter book name..."
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+    <div data-theme="synthwave" className="min-h-screen bg-base-100">
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content flex-col w-full max-w-2xl">
+          <form onSubmit={handleSearch} className="card w-full bg-base-300 shadow-2xl rounded-lg border-2 border-primary p-10">
+            <h2 className="text-3xl font-bold text-center text-secondary mb-8">Add a New Book</h2>
+            
+            <div className="mb-8">
+              <label className="block font-semibold text-lg mb-3 text-accent">
+                Book Name:
+              </label>
+              <input
+                type="text"
+                placeholder="Enter book name..."
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="input input-bordered input-secondary w-full text-lg py-6"
+              />
+            </div>
+            
+            <div className="mb-10">
+              <label className="block font-semibold text-lg mb-3 text-accent">
+                Author Name:
+              </label>
+              <input
+                type="text"
+                placeholder="Enter author name..."
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+                className="input input-bordered input-secondary w-full text-lg py-6"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="btn btn-secondary btn-lg w-full text-lg hover:scale-105 transition-transform"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
       </div>
-      <div className="mb-6">
-        <label className="block text-gray-800 font-semibold mb-2">
-          Author Name:
-        </label>
-        <input
-          type="text"
-          placeholder="Enter author name..."
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-black py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
-      >
-        Submit
-      </button>
-    </form>
+    </div>
   );
 }
 
