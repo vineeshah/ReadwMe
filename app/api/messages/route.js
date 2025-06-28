@@ -3,11 +3,11 @@ import prisma from '@/app/config/db';
 
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
-    const bookId = searchParams.get('bookId');
+    const bookName = searchParams.get('bookName');
     
-    if (!bookId) {
+    if (!bookName) {
         return NextResponse.json(
-            { error: 'Book ID is required' },
+            { error: 'Book Name is required' },
             { status: 400 }
         );
     }
@@ -15,7 +15,7 @@ export async function GET(request) {
     try {
         const messages = await prisma.message.findMany({
             where: {
-                bookId: bookId,
+                bookName: bookName,
             },
             include: {
                 user: {

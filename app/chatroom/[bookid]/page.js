@@ -40,10 +40,11 @@ export default function chat({params}){
     
     useEffect(() => {
         socket.connect()
-        socket.emit("join-book", { bookId, userId });//join everytime you go to this page however the server still exists
+        if (!book?.name) return;
+        socket.emit("join-book", { bookName: book?.name, userId });//join everytime you go to this page however the server still exists
         const loadExistingMessages = async () => {
             try {
-                const response = await fetch(`/api/messages?bookId=${bookId}`);
+                const response = await fetch(`/api/messages?bookName=${book?.name}`);
                 ;
                 if (response.ok) {
                     const data = await response.json();

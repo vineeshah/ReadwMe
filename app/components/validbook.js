@@ -25,7 +25,7 @@ export default async function validbook(data) {
     });
 
   const messages = [
-    new SystemMessage("Only respond with 'Yes' or 'No'. If the book name is not specific or confusing, respond with 'retry'"),
+    new SystemMessage("Respond only with 'Yes', 'No', or 'Retry'. If the book name or author is incomplete, incorrect, or needs clarification, respond with 'Retry'. If the book does not exist, respond with 'No'. If the book exists, respond with 'Yes'. Also, for the name of a book that is part of a series, only accept the books full name or 'No'"),
     new HumanMessage(`Is '${name}' by '${author}' a valid book? Answer based on whether that book exists or not.`),
   ];
 

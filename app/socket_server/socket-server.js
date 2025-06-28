@@ -12,21 +12,23 @@ const io = new Server(httpserver, {//for conecting to a new server for websocket
 io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
-    socket.on("join-book", async ({ bookId, userId }) => {
-        if (!bookId || !userId) return;//just a check to prevent further mess
+    socket.on("join-book", async ({ bookName, userId }) => {
+        if (!bookName || !userId) return;//just a check to prevent further mess
 
-        socket.join(`book-${bookId}`);//joining te room here whch will be automatically made and joined by anyone with the same id
-        //here the `book-${bookId}` becomes sorta like the password for the room
-        console.log(`${userId} joined book-${bookId}`);
+        const normalizedBookName = bookName.toLowerCase().replace(/\s+/g, "_"); // Normalize bookName
+        socket.join(`book-${normalizedBookName}`);//joining te room here which will be automatically made and joined by anyone with the same name
+        //here the `book-${bookName}` becomes sorta like the password for the room
+        console.log(`${userId} joined book-${bookName}`);
     });
 
 
-    socket.on("send-message", async({bookId,userId, text}) => {
+    socket.on("send-message", async({bookName,userId, text}) => {
         try{
+            const normalizedBookName = bookName.toLowerCase().replace(/\s+/g, "_");
             const message = await prisma.message.create({
                 data: {
                     text,
-                    bookId,
+                    bookName,
                     userId,
                     },
                     include: {
@@ -35,7 +37,7 @@ io.on("connection", (socket) => {
                 },
             })
             console.log("message posted succesfully!")
-            io.to(`book-${bookId}`).emit("chat-message", {
+            io.to(`book-${normalizedBookName}`).emit("chat-message", {
                 id: message.id,
                 text: message.text,
                 createdAt: message.createdAt,

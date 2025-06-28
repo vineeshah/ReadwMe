@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n \"next,socket\" -c \"blue,green\" \"next dev\" \"node app/server/socket-server.js\"",
-    "socket": "node app/server/socket-server.js",
+    "dev": "concurrently -n \"next,socket\" -c \"blue,green\" \"next dev\" \"node app/socket_server/socket-server.js\"",
+    "socket": "node app/socket_server/socket-server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

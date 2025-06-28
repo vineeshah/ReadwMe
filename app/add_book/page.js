@@ -7,33 +7,70 @@ function AddBookPage() {
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
   const { data: session } = useSession(); 
+  const userId = session?.user?.id
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    const isValid = await validbook({ name: name, author: author }); 
-    if (isValid=="Yes") {
+    const isValid = await validbook({ name: name, author: author });
+  
+    if (isValid === "Yes") {
+      setName(name.toLowerCase());
+      setAuthor(author.toLowerCase());
+  
+      let unique; // Initialize the variable outside the try block
+  
       try {
-        const date = new Date().toISOString(); 
-        console.log(session.user)
-        const userId = session?.user?.id;
-        const response = await fetch(`/api/requests`, {
-          method: 'POST',
-          headers: {"Content-Type" : "application/json"},
-          body: JSON.stringify({ name: name, author: author, userId: userId, publishDate: date }),
+        const r1 = await fetch(`/api/requests/bookname/${encodeURIComponent(name)}`, {
+          method: "GET",
+          headers: {
+            author: author,
+            userId : userId
+          },
         });
-        const data = await response.json();
-        alert("Book Added!!")
-        setAuthor("")
-        setName("")
-        console.log('Book added:', data);
+  
+        if (!r1.ok) {
+          throw new Error("Failed to check book uniqueness");
+        }
+  
+        unique = await r1.json();
+        if (unique["status"]==false) {alert("book already exists!!");return}
+        console.log("Unique response:", unique);
       } catch (error) {
-        console.error(error);
-        alert('Error adding the book in the book route');
+        console.error("Error checking book uniqueness:", error);
+        alert("Error checking book uniqueness");
+        return; 
       }
-    } else if(isValid=="No"){
-      alert('Invalid book. Please check the details and try again!');
-    }else{
-        alert('Be more specific or check spelling!')
+  
+      if (unique["status"]==true) { 
+        try {
+          const date = new Date().toISOString();
+          const userId = session?.user?.id;
+          const response = await fetch(`/api/requests`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name, author: author, userId: userId, publishDate: date }),
+          });
+  
+          if (!response.ok) {
+            throw new Error("Failed to add the book");
+          }
+  
+          const data = await response.json();
+          alert("Book Added!!");
+          setAuthor("");
+          setName("");
+          console.log("Book added:", data);
+        } catch (error) {
+          console.error("Error adding the book:", error);
+          alert("Error adding the book in the book route");
+        }
+      } else {
+        alert("Be more specific or check spelling!");
+      }
+    } else if (isValid === "No") {
+      alert("Invalid book. Please check the details and try again! Make sure you enter the exact name of the book and the author.");
+    } else {
+      alert("Be more specific or check spelling or make sure this is the correct author!");
     }
   };
 
