@@ -57,6 +57,7 @@ export default function chat({params}){
         loadExistingMessages();
 
         socket.on("chat-message", (msg) => {//for if someone sends a message, this stays active the entire time the component is mounted, and never stops listening for the messages getting posted
+            console.log("Received message:", msg);
             setMessages((prev) => {
                 // Check if this message is already in our messages array
                 // This prevents duplicate messages when sender receives their own message back
@@ -80,14 +81,18 @@ export default function chat({params}){
             socket.off("error");
             socket.disconnect();
         };
-    },[bookId, userId])//dependency list for when the effect comes into place
+    },[book?.name, userId])//dependency list for when the effect comes into place
 
     const sendMessage = () => {
         if(!input){
             alert("input cant be blank!")
             return;
         }
-        socket.emit("send-message", {bookId, userId, text:input})
+        if (!book?.name) {
+          alert("Book name is not available yet!");
+          return;
+        }
+        socket.emit("send-message", {bookName : book?.name, userId, text:input})
 
         // unique temporary ID
         const tempId = `temp-${Date.now()}`;

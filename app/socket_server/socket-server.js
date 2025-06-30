@@ -15,20 +15,23 @@ io.on("connection", (socket) => {
     socket.on("join-book", async ({ bookName, userId }) => {
         if (!bookName || !userId) return;//just a check to prevent further mess
 
-        const normalizedBookName = bookName.toLowerCase().replace(/\s+/g, "_"); // Normalize bookName
+        const normalizedBookName = bookName.toLowerCase().replace(/[^a-z0-9]/g, ""); // Normalize bookName
         socket.join(`book-${normalizedBookName}`);//joining te room here which will be automatically made and joined by anyone with the same name
         //here the `book-${bookName}` becomes sorta like the password for the room
         console.log(`${userId} joined book-${bookName}`);
+        console.log(`Room members for book-${normalizedBookName}:`, io.sockets.adapter.rooms[`book-${normalizedBookName}`]?.sockets);
+        // console.log(normalizedBookName)
     });
 
 
     socket.on("send-message", async({bookName,userId, text}) => {
         try{
-            const normalizedBookName = bookName.toLowerCase().replace(/\s+/g, "_");
+            const normalizedBookName = bookName.toLowerCase().replace(/[^a-z0-9]/g, "");
+            console.log(normalizedBookName)
             const message = await prisma.message.create({
                 data: {
                     text,
-                    bookName,
+                    bookName: normalizedBookName,
                     userId,
                     },
                     include: {
@@ -36,7 +39,7 @@ io.on("connection", (socket) => {
                     //also returns the user info so that while displaying the message posted i dont have to make a separate query to get the user info
                 },
             })
-            console.log("message posted succesfully!")
+            console.log("Broadcasting message to room:", `book-${normalizedBookName}`);
             io.to(`book-${normalizedBookName}`).emit("chat-message", {
                 id: message.id,
                 text: message.text,
