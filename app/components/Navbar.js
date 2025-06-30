@@ -8,7 +8,8 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const {data:session, status} = useSession()
-  const userImage = session?.user?.image
+  const userImage = session?.user?.image;
+  const spotifyToken = session?.user?.spotifyToken;
   
   if(status=="authenticated"){
     return (
@@ -18,6 +19,24 @@ export default function Navbar() {
           <li><a href="/about" className="hover:underline">About</a></li>
         </ul>
         <div className="flex items-center gap-4 ">
+        {!spotifyToken ? (
+            <button
+              onClick={() => router.push("/api/spotify/connect")}
+              className="btn btn-success"
+            >
+              Connect Spotify
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <img
+                src="/spotify-icon.png" 
+                alt="Spotify Connected"
+                className="w-6 h-6"
+              />
+              <span className="text-sm font-semibold">Spotify Connected</span>
+            </div>
+          )}
+          
           {pathname === '/' && (
             <button
               onClick={() => router.push("/add_book")}
