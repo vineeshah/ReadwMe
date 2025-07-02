@@ -22,10 +22,29 @@ export const authOptions = {
           return true;
         },
         async session({ session, user }) {
-          session.user.id = user.id;
-          return session;
+            const dbUser = await prisma.user.findUnique({
+                where: { id: user.id },
+                });
+            session.user.id = user.id;
+            session.user.spotifyToken = dbUser?.spotifyToken || null; 
+            session.user.spotifyTokenExpiry = dbUser?.spotifyTokenExpiry || null;
+            return session;
         },
     },
+    session: {
+        strategy: "database",
+      },
+    cookies: {
+        sessionToken: {
+          name: "next-auth.session-token",
+          options: {
+            httpOnly: true,
+            sameSite: "lax", // Use "lax" for cross-origin GET requests
+            path: "/",
+            secure: false, 
+          },
+        },
+      },
     // pages: {
     //     error: '/login',
     // }, 

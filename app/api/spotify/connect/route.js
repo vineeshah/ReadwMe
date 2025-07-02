@@ -11,6 +11,7 @@ export async function GET() {
 //   console.log(client_id)
   authUrl.searchParams.set('scope', scope);
   authUrl.searchParams.set('redirect_uri', redirect_uri);
+  authUrl.searchParams.set('show_dialog', 'true');
 
   return NextResponse.redirect(authUrl.toString());
 }

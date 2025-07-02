@@ -61,5 +61,5 @@ io.on("connection", (socket) => {
  
 })
 httpserver.listen(3001, () => {
-    console.log("Socket.IO server running on http://localhost:3001");
+    console.log("Socket.IO server running on http://127.0.0.1:3001");
   });    //listens for calls from frontend and creates the server on 3001 to not disturb frontned on 3000

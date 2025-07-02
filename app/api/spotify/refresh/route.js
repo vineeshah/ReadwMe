@@ -1,11 +1,14 @@
 import prisma from '@/app/config/db';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { NextResponse } from 'next/server';
 
-export async function refreshSpotifyToken(userId) {
-    const session = await getServerSession(authOptions)
-    const userId = session?.user?.id
+
+export async function POST(req) {
+  
+    // const session = await getServerSession(authOptions)
+
   try {
+    const { userId } = await req.json(); 
     // Fetch the user's refresh token from the database
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -36,13 +39,20 @@ export async function refreshSpotifyToken(userId) {
       throw new Error('Failed to refresh Spotify token.');
     }
 
+    const expiresIn = data.expires_in; 
+    const expiryDate = new Date(Date.now() + expiresIn * 1000); 
+
+
     // Update the user's access token in the database
     await prisma.user.update({
       where: { id: userId },
-      data: { spotifyToken: data.access_token },
+      data: {
+            spotifyToken: data.access_token,
+            spotifyTokenExpiry: expiryDate,
+        },
     });
 
-    return data.access_token;
+    return NextResponse.json({ accessToken: data.access_token });
   } catch (error) {
     console.error('Error refreshing Spotify token:', error);
     throw error;

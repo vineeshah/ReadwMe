@@ -10,6 +10,7 @@ export default function Navbar() {
   const {data:session, status} = useSession()
   const userImage = session?.user?.image;
   const spotifyToken = session?.user?.spotifyToken;
+  console.log("spotifyToken: ",spotifyToken)
   
   if(status=="authenticated"){
     return (
@@ -27,14 +28,18 @@ export default function Navbar() {
               Connect Spotify
             </button>
           ) : (
-            <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push("/spotify")}
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full flex items-center justify-center">
               <img
-                src="/spotify-icon.png" 
+                src="/spotify-icon.svg" 
                 alt="Spotify Connected"
                 className="w-6 h-6"
               />
-              <span className="text-sm font-semibold">Spotify Connected</span>
             </div>
+            </button>
           )}
           
           {pathname === '/' && (
