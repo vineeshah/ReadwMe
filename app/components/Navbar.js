@@ -10,14 +10,14 @@ export default function Navbar() {
   const {data:session, status} = useSession()
   const userImage = session?.user?.image;
   const spotifyToken = session?.user?.spotifyToken;
-  console.log("spotifyToken: ",spotifyToken)
+  // console.log("spotifyToken: ",spotifyToken)
   
   if(status=="authenticated"){
     return (
       <nav data-theme="synthwave" className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <ul className="flex gap-4">
           <li><a href="/" className="hover:underline">Home</a></li>
-          <li><a href="/about" className="hover:underline">About</a></li>
+          <li><a href="/recs" className="hover:underline">Recommendations</a></li>
         </ul>
         <div className="flex items-center gap-4 ">
         {!spotifyToken ? (

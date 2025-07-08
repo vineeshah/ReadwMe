@@ -45,9 +45,9 @@ export const authOptions = {
           },
         },
       },
-    // pages: {
-    //     error: '/login',
-    // }, 
+    pages: {
+        error: '/login',
+    }, 
     // events: {
     //     error(message) {
     //         console.error("NextAuth error:", message); 

@@ -2,22 +2,31 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import validbook from "../components/validbook";
+import setGenres from "../components/setGenres";
 
 function AddBookPage() {
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
+  // const[genre, setGenre] = useState([])
   const { data: session } = useSession(); 
   const userId = session?.user?.id
 
   const handleSearch = async (e) => {
     e.preventDefault();
     const isValid = await validbook({ name: name, author: author });
+    const genreData = await setGenres({
+      name: name,
+      author: author
+    });
+    // console.log("genreData:",genreData)
+    // console.log("isvalid:",isValid)
+
   
     if (isValid === "Yes") {
       setName(name.toLowerCase());
       setAuthor(author.toLowerCase());
   
-      let unique; // Initialize the variable outside the try block
+      let unique; 
   
       try {
         const r1 = await fetch(`/api/requests/bookname/${encodeURIComponent(name)}`, {
@@ -55,15 +64,30 @@ function AddBookPage() {
             throw new Error("Failed to add the book");
           }
   
-          const data = await response.json();
+          const bookData = await response.json();
           alert("Book Added!!");
           setAuthor("");
           setName("");
-          console.log("Book added:", data);
-        } catch (error) {
-          console.error("Error adding the book:", error);
-          alert("Error adding the book in the book route");
+          console.log("Book added:", bookData);
+         
+        if(genreData==false){
+          console.log("llm response for genre error!")
+        }else{
+          const genreResponse = await fetch(`/api/requests/genre`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({genreData: genreData, bookId:bookData.id, userId:userId})
+          });
+          if (!response.ok) {
+            throw new Error("Failed to add the genre of the book");
+          }
+          const genreResult = await genreResponse.json();
+          console.log(genreResult)
         }
+      }catch (error) {
+            console.error("Error adding the book:", error);
+            alert("Error adding the book in the book route");
+          }
       } else {
         alert("Be more specific or check spelling!");
       }

@@ -21,6 +21,7 @@ model User {
   spotifyToken  String?  
   spotifyRefreshToken String?
   spotifyTokenExpiry DateTime?
+  genrePrefs    UserGenrePreference[]
 }
 
 model Account {
@@ -65,6 +66,7 @@ model Book {
   author       String
   userId       String
   publishDate  DateTime
+  genres       BookGenre[]
   user User @relation(fields: [userId], references: [id])
 }
 model Message {
@@ -74,4 +76,31 @@ model Message {
   bookName  String
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+}
+model Genre {
+  id               Int                     @id @default(autoincrement())
+  name             String                   @unique
+  books            BookGenre[]
+  userPrefs        UserGenrePreference[]
+}
+model BookGenre {
+  bookId           String
+  genreId          Int
+  weight           Float                    @default(1.0)
+
+  book             Book                     @relation(fields: [bookId], references: [id])
+  genre            Genre                    @relation(fields: [genreId], references: [id])
+
+  @@id([bookId, genreId]) 
+}
+
+model UserGenrePreference {
+  userId           String
+  genreId          Int
+  weight           Float                    @default(1.0)
+
+  user             User                     @relation(fields: [userId], references: [id])
+  genre            Genre                    @relation(fields: [genreId], references: [id])
+
+  @@id([userId, genreId]) 
 }
