@@ -90,7 +90,7 @@ export async function GET(request, {params}){
         const uniqueBooks = similarUserBooks.filter(book => 
             !userBookNames.has(book.name.toLowerCase())
         );
-        console.log("uniqueBooks", uniqueBooks)
+        // console.log("uniqueBooks", uniqueBooks)
 
         return NextResponse.json({
             users: similarUsers,

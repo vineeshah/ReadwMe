@@ -15,6 +15,13 @@ export async function getAllBooks() {
       orderBy: {
         publishDate: "desc",
       },
+      include: {
+        genres: {
+            include: {
+                genre: true 
+            }
+        }
+      }
     });
     return books;
   } catch (error) {
