@@ -102,20 +102,46 @@ export default function Spotify(){
 
     async function handleSearch(keywords){
         try{
+            const searchParams = [
+                selectedBook.name,
+                ...keywords, //Spreads the keywords array 
+            ];
+            const query2 = searchParams.join(' ');
             const query = `${keywords.join(' ')}`;
-            const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=playlist&limit=20`;
-            //add more urls for backups and varied combos to choose from to recommend
-            const res = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-            });
 
-            const data = await res.json();
-            console.log("data", data)
-            setRecommendations(data.playlists.items)
-            console.log(data.playlists.items);
-        }catch(e){
+            const urls = [
+                `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=playlist&limit=3`,
+                `https://api.spotify.com/v1/search?q=${encodeURIComponent(selectedBook.name)}&type=playlist&limit=3`,
+                `https://api.spotify.com/v1/search?q=${encodeURIComponent(query2)}&type=playlist&limit=3`,
+                
+                
+                
+            ];
+            
+            const responses = await Promise.all(//runs them all in parallel
+                urls.map(url => 
+                    fetch(url, {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    })
+                )//returns an array of response objects
+            );
+            console.log("responses", responses)
+
+            const results = await Promise.all(
+                responses.map(async(res) => {//async cuz inside the function a lot of stuff is async so they need to be awaited first before returning
+                    if (!res.ok) throw new Error(`API Error: ${res.status}`);
+                    const data = await res.json();
+                    return data.playlists.items;
+                })
+            )
+            console.log("results", results)
+
+            const allPlaylists = results.flat().filter(Boolean);//combines an array of arrays into a single array and then filter(Boolean) removes aLL NULL ITEMS BEcause boolean(null) is false and filter removes false items
+            const uniquePlaylists = [...new Map(
+                allPlaylists.map(playlist => [playlist.id, playlist])
+            ).values()];
+            setRecommendations(uniquePlaylists)
+    }catch(error){
             console.error('Search error:', error);
             setError('Failed to fetch playlists');
         }

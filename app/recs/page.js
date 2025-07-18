@@ -12,13 +12,17 @@ export default function recs(){
     const userId = session?.user?.id
     const [useAskGroq, setUseAskGroq] = useState(false)
     const [sim, setSim] = useState(5)
+    const [pendingSim, setPendingSim] = useState(5);
     const handleToggleGroq = () => {
         setUseAskGroq(!useAskGroq);
-        setRecBooks([]); // Clear current recommendations
+        setRecBooks([]); 
         setIsLoading(true);
     };
     const handleSimChange = (event) => {
-        setSim(parseInt(event.target.value));
+        setPendingSim(parseInt(event.target.value));
+    };
+    const handleApplyChanges = () => {
+        setSim(pendingSim); 
     };
     useEffect(() => {
         const fetchRecommendations = async () => {
@@ -30,7 +34,8 @@ export default function recs(){
 
                 if (useAskGroq) {
                     const response = await fetch("/api/requests");
-                    const userBooks = await response.json();
+                    const b = await response.json();
+                    setUserBooks(b);
                     
                     const aiRecs = await askGroq({
                         id: userId,
@@ -66,43 +71,47 @@ export default function recs(){
 
     return (
         <div className="p-4">
-        <div className="mb-6">
-            <h1 className="text-2xl font-bold">
-                {useAskGroq ? 'AI Recommendations' : 'User-Based Recommendations'}
-            </h1>
-            <p className="text-sm text-gray-600 mt-2">
-                Books are listed from most to least recommended :)
-            </p>
-            
-            {/* Removed bg-gray-50 to blend with page background */}
-            <div className="mt-4 p-4 rounded-lg">
-                <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <button
-                        onClick={handleToggleGroq}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                    >
-                        {useAskGroq ? 'Use Custom Recommendation Algorithm' : 'Use AI Recommendations'}
-                    </button>
-                    
-                    {useAskGroq && (
-                        <div className="flex items-center gap-4">
-                            <label htmlFor="similarity" className="text-sm font-medium whitespace-nowrap">
-                                Similarity To Your Taste - {sim}
-                            </label>
-                            <input
-                                type="range"
-                                id="similarity"
-                                min="1"
-                                max="10"
-                                value={sim}
-                                onChange={handleSimChange}
-                                className="w-48 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                            />
-                        </div>
-                    )}
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold">
+                    {useAskGroq ? 'AI Recommendations' : 'User-Based Recommendations'}
+                </h1>
+
+                <div className="mt-4 p-4 rounded-lg">
+                    <div className="flex flex-col md:flex-row md:items-center gap-4">
+                        <button
+                            onClick={handleToggleGroq}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                        >
+                            {useAskGroq ? 'Use Custom Recommendation Algorithm' : 'Use AI Recommendations'}
+                        </button>
+                        
+                        {useAskGroq && (
+                            <div className="flex items-center gap-4">
+                                <label htmlFor="similarity" className="text-sm font-medium whitespace-nowrap">
+                                    Similarity To Your Taste - {pendingSim}
+                                </label>
+                                <input
+                                    type="range"
+                                    id="similarity"
+                                    min="1"
+                                    max="10"
+                                    value={pendingSim}
+                                    onChange={handleSimChange}
+                                    className="w-48 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                />
+                                <button
+                                    onClick={handleApplyChanges}
+                                    disabled={pendingSim === sim}
+                                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 
+                                        transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Fetch
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
     
             
             {isLoading && <div className="p-4">Loading recommendations...</div>}

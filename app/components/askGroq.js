@@ -16,7 +16,7 @@ export default async function askGroq(data) {
 
   const messages = [
     new SystemMessage(
-        "You are a book recommendation system. Provide exactly 5 book recommendations based on the user's reading history and requested similarity level. Format your response as a JSON array of objects, where each object has 'name' and 'author' fields. Example format: [{\"name\": \"Book Title\", \"author\": \"Author Name\"}]. Ensure similarity level (1-10) influences how closely the recommendations match the user's existing books in terms of genre and style."
+        "You are a book recommendation system. Provide exactly 10 book recommendations based on the user's reading history and requested similarity level. Format your response as a JSON array of objects, where each object has 'name' and 'author' fields. Example format: [{\"name\": \"Book Title\", \"author\": \"Author Name\"}]. Ensure similarity level (1-10) influences how closely the recommendations match the user's existing books in terms of genre and style. Make sure you dont keep recommending the same books for the highst and lowest level."
     ),
     new HumanMessage(
         `Please recommend books with a similarity level of ${similarity} (where 10 means very similar and 1 means loosely similar) based on these books: ${JSON.stringify(books)}. Return only the JSON array.`
