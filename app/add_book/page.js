@@ -54,10 +54,32 @@ function AddBookPage() {
         try {
           const date = new Date().toISOString();
           const userId = session?.user?.id;
+          const pureName = name
+          .normalize("NFKD")                         // Normalize accents (é → e)
+          .replace(/[\u0300-\u036f]/g, "")           // Remove diacritics
+          .trim()                                    // Remove leading/trailing spaces
+          .split(/[\s\-_/]+/)                        // Split on space, hyphen, slash, underscore
+          .filter(Boolean)                           // Remove empty parts
+          .map(word =>
+            word.charAt(0).toUpperCase() + 
+            word.slice(1).toLowerCase()
+          )
+          .join(" ");
+          const pureAuthor = author
+          .normalize("NFKD")                         // Normalize accents (é → e)
+          .replace(/[\u0300-\u036f]/g, "")           // Remove diacritics
+          .trim()                                    // Remove leading/trailing spaces
+          .split(/[\s\-_/]+/)                        // Split on space, hyphen, slash, underscore
+          .filter(Boolean)                           // Remove empty parts
+          .map(word =>
+            word.charAt(0).toUpperCase() + 
+            word.slice(1).toLowerCase()
+          )
+          .join(" ");
           const response = await fetch(`/api/requests`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: name, author: author, userId: userId, publishDate: date }),
+            body: JSON.stringify({ name: pureName, author: pureAuthor, userId: userId, publishDate: date }),
           });
   
           if (!response.ok) {
