@@ -1,5 +1,6 @@
 "use client"
 import { use, useState, useEffect } from "react";
+import Snoowrap from "snoowrap";
 
 export default function senti({params}){
     const [book, setBook] = useState(null)
@@ -9,6 +10,11 @@ export default function senti({params}){
     const [loading, setLoading] = useState(false)
     const [screenshot, setScreenshot] = useState(null)
     const {id} = use(params);
+
+    const reddit = new Snoowrap({
+        REDDIT_CLIENT_ID = ,
+        REDDIT
+    })
     
     useEffect(() => {
         const fetchData = async() => { 
@@ -26,14 +32,14 @@ export default function senti({params}){
         if (book) {
             try {
                 setLoading(true);
-                const result = await fetch(`/api/webscraper/`,{
-                    method:"POST",
-                    headers:{"Content-Type": "application/json"},
-                    body: JSON.stringify({book:book})
-                });
-                const data = await result.json();
-                setTitle(data.titles)
-                setScreenshot(data.screenshot)
+                // const result = await fetch(`/api/webscraper/`,{
+                //     method:"POST",
+                //     headers:{"Content-Type": "application/json"},
+                //     body: JSON.stringify({book:book})
+                // });
+                // const data = await result.json();
+                // setTitle(data.titles)
+                // setScreenshot(data.screenshot)
                 // setLink(data.firstLink);
                 // setSnippet(data.title);
             } catch (error) {

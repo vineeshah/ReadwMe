@@ -88,7 +88,7 @@ model BookGenre {
   genreId          Int
   weight           Float                    @default(1.0)
 
-  book             Book                     @relation(fields: [bookId], references: [id])
+  book             Book                     @relation(fields: [bookId], references: [id], onDelete: Cascade)
   genre            Genre                    @relation(fields: [genreId], references: [id])
 
   @@id([bookId, genreId]) 

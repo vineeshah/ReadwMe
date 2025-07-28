@@ -14,11 +14,31 @@ export async function GET(request, { params }) {
     const book = await prisma.book.findFirst({
       where: {
         name: {
-            equals: name,
+            equals: name
+              .normalize("NFKD")                         // Normalize accents (é → e)
+              .replace(/[\u0300-\u036f]/g, "")           // Remove diacritics
+              .trim()                                    // Remove leading/trailing spaces
+              .split(/[\s\-_/]+/)                        // Split on space, hyphen, slash, underscore
+              .filter(Boolean)                           // Remove empty parts
+              .map(word =>
+                word.charAt(0).toUpperCase() + 
+                word.slice(1).toLowerCase()
+              )
+              .join(" "),
             mode: "insensitive", // Case-insensitive search 
           },
         author: {
-        equals: author,
+        equals: author
+        .normalize("NFKD")                         // Normalize accents (é → e)
+        .replace(/[\u0300-\u036f]/g, "")           // Remove diacritics
+        .trim()                                    // Remove leading/trailing spaces
+        .split(/[\s\-_/]+/)                        // Split on space, hyphen, slash, underscore
+        .filter(Boolean)                           // Remove empty parts
+        .map(word =>
+          word.charAt(0).toUpperCase() + 
+          word.slice(1).toLowerCase()
+        )
+        .join(" "),
         mode: "insensitive", 
         },
         userId: userId,
