@@ -86,15 +86,25 @@ export async function GET(request, {params}){
         const userBookNames = new Set(
             userBooks.map(book => book.name.toLowerCase())//to avoid same book recs as the userbooks
         );
-        
         const uniqueBooks = similarUserBooks.filter(book => 
             !userBookNames.has(book.name.toLowerCase())
         );
         // console.log("uniqueBooks", uniqueBooks)
 
+        //now removing dups from the recommended books
+        const uBooks = new Set();
+        const uniqueFilteredBooks = [];
+        for (const book of uniqueBooks) {
+            const bookName = book.name.toLowerCase();
+            if (!uBooks.has(bookName)) {
+                uBooks.add(bookName);
+                uniqueFilteredBooks.push(book);
+            }
+        }
+
         return NextResponse.json({
             users: similarUsers,
-            books: uniqueBooks
+            books: uniqueFilteredBooks
         })
 
 

@@ -8,9 +8,9 @@ export default function senti({params}){
     const [posts, setPosts] = useState([])
     // const [link, setLink] = useState(null)
     // const [snippet, setSnippet] = useState(null) 
-    const[title, setTitle] = useState(null)
+    // const[title, setTitle] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [screenshot, setScreenshot] = useState(null)
+    // const [screenshot, setScreenshot] = useState(null)
     const {id} = use(params);
 
     // const reddit = new Snoowrap({
@@ -38,11 +38,16 @@ export default function senti({params}){
     }, [id])
     
     
-    const handleSearch = async () => {
+    const handleSearch = async (retryWithAuthor = false) => {
         if (book?.name) {
             try {
                 setLoading(true);
-                const redditRes = await fetch(`/api/reddit?q=${encodeURIComponent(book.name)}`, {
+                console.log("retryWithAuthor", retryWithAuthor)
+                const searchQuery = retryWithAuthor 
+                ? book.author 
+                : book.name
+                console.log("using this search query:", searchQuery)
+                const redditRes = await fetch(`/api/reddit?q=${encodeURIComponent(searchQuery)}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -54,7 +59,13 @@ export default function senti({params}){
                 }
                 
                 const redditData = await redditRes.json();
+                console.log("redditData", redditData)
                 const posts = redditData.data.children.map(child => child.data);
+                if(posts.length==0 && !retryWithAuthor){
+                    console.log("No results with book name, trying author...");
+                    return handleSearch(true);
+                }
+                console.log("posts", posts)
                 setPosts(posts);
             } catch (error) {
                 console.error("Error fetching Reddit posts:", error);
@@ -66,42 +77,42 @@ export default function senti({params}){
     
     return(
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="p-8">
-                <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Pop Culture Hub</h1>
-                
-                {book ? (
-                    <div className="mb-8 p-6 bg-blue-50 rounded-lg border border-blue-100">
-                        <p className="text-xl text-center mb-6">
-                            <span className="font-semibold text-blue-800">{book.name}</span>
-                            <span className="text-gray-700"> by {book.author}</span>
-                        </p>
-                        
-                        <div className="text-center mb-8">
-                            <button 
-                                onClick={handleSearch}
-                                disabled={loading}
-                                className={`
-                                    px-6 py-3 
-                                    ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'} 
-                                    text-white font-medium rounded-lg
-                                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 
-                                    transition-colors duration-200
-                                    disabled:cursor-not-allowed
-                                `}
-                            >
-                                {loading ? 'Finding discussions...' : 'Find Reddit Discussions'}
-                            </button>
-                        </div>
-                        
+            <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+                <div className="p-8">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Pop Culture Hub</h1>
+                    
+                    {book ? (
+                        <div className="mb-8 p-6 bg-blue-50 rounded-lg border border-blue-100">
+                            <p className="text-xl text-center mb-6">
+                                <span className="font-semibold text-blue-800">{book.name}</span>
+                                <span className="text-gray-700"> by {book.author}</span>
+                            </p>
                             
+                            <div className="text-center mb-8">
+                                <button 
+                                    onClick={() => handleSearch(false)}
+                                    disabled={loading}
+                                    className={`
+                                        px-6 py-3 
+                                        ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'} 
+                                        text-white font-medium rounded-lg
+                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 
+                                        transition-colors duration-200
+                                        disabled:cursor-not-allowed
+                                    `}
+                                >
+                                    {loading ? 'Finding discussions...' : 'Find Reddit Discussions'}
+                                </button>
+                            </div>
+                            
+                                
                             {loading && (
                                 <div className="mt-4 text-center">
                                     <p className="text-gray-600">Tea Time...</p>
                                 </div>
                             )}
-                            
-                            {posts.length > 0 && !loading &&(
+                  
+                            {posts.length > 0 && !loading && (
                                 <div className="mt-8">
                                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Reddit Discussions</h2>
                                     <div className="space-y-4">
@@ -145,7 +156,6 @@ export default function senti({params}){
                     ) : (
                         <p className="text-center">Loading book information...</p>
                     )}
-        
                 </div>
             </div>
         </div>

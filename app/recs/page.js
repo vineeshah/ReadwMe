@@ -49,6 +49,7 @@ export default function recs(){
                         throw new Error('Failed to fetch recommendations');
                     }
                     const data = await response.json();
+                    console.log("recd books:",data.books)
                     setRecBooks(data.books || []);
                 }
             } catch (err) {

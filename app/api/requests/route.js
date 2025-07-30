@@ -49,7 +49,7 @@ export async function PATCH(request){
           { error: "Failed to update book in the requests" },
           { status: 500 }
         );
-      }
+    }
 }
 export async function DELETE(request){
     try{
