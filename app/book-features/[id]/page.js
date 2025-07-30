@@ -85,7 +85,7 @@ export default function book({params}){
                             
                             <div className="transform transition-all duration-300 hover:scale-105">
                                 <button
-                                    onClick={() => router.push(`/sentiment/${id}`)}
+                                    onClick={() => router.push(`/news/${id}`)}
                                     className="w-full h-full bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl border-b-4 border-purple-500"
                                 >
                                     <div className="p-1 bg-purple-500 w-full"></div>
@@ -93,9 +93,9 @@ export default function book({params}){
                                         <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                            
                                         </div>
-                                        <div className="text-xl font-semibold text-gray-800 mb-3">Sentiment Analysis</div>
-                                        <p className="text-gray-600 text-sm mb-4">Understand the emotional tone and mood throughout the book</p>
-                                        <div className="mt-4 text-purple-600 font-medium text-sm">Analyze Sentiment →</div>
+                                        <div className="text-xl font-semibold text-gray-800 mb-3">Pop Culture Hub</div>
+                                        <p className="text-gray-600 text-sm mb-4">Get the latest and hottest tea about this book.</p>
+                                        <div className="mt-4 text-purple-600 font-medium text-sm">Tea Time? →</div>
                                     </div>
                                 </button>
                             </div>
