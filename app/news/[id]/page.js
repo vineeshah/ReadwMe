@@ -1,12 +1,14 @@
 "use client"
 import { use, useState, useEffect } from "react";
 import { NextResponse } from "next/server";
+import { useRouter } from "next/navigation";
 
 export default function senti({params}){
     const [book, setBook] = useState(null)
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(false)
     const {id} = use(params);
+    const router = useRouter()
     
     useEffect(() => {
         const fetchData = async() => { 
@@ -64,6 +66,12 @@ export default function senti({params}){
     return(
         <div data-theme="synthwave" className="min-h-screen p-8">
             <div className="max-w-3xl mx-auto">
+                <button 
+                    onClick={() => router.push(`/book-features/${id}`)}
+                    className="flex items-center text-primary hover:text-primary-focus mb-6 transition-colors duration-200"
+                >
+                    ← Back to Tools
+                </button>
                 <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
                     <div className="p-8">
                         <h1 className="text-3xl font-bold text-primary mb-6 text-center">Pop Culture Hub</h1>

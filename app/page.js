@@ -106,6 +106,8 @@ export default function Home() {
             </h1>
           </div>
           <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">Your Book Collection</h2>
+            <h3 className="text-l mb-4 text-primary">(Click on the book titles for tools access!)</h3>
             {error ? (
               <p className="text-red-500 text-center">{error}</p>
             ) : books.length > 0 ? (
@@ -115,7 +117,7 @@ export default function Home() {
                     <tr>
                       <th className="text-lg">Title</th>
                       <th className="text-lg">Author</th>
-                      <th className="text-lg">Created At</th>
+                      <th className="text-lg">Added At</th>
                       <th className="text-lg">Delete</th>
                     </tr>
                   </thead>
@@ -150,6 +152,57 @@ export default function Home() {
                 <span>No books available for this user</span>
               </div>
             )}
+          </div>
+          
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold mb-6">Explore Features</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+                <div className="card-body">
+                  <h3 className="card-title text-primary">Book Recommendations</h3>
+                  <p>Discover new books based on your reading preferences using a custom algorithm.</p>
+                  <div className="card-actions justify-end mt-4">
+                    <Link href="/recs" style={{border: "2px solid #000000", color: "#000000"}} className="btn btn-primary">Explore Recommendations</Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+                <div className="card-body">
+                  <h3 className="card-title text-primary">Spotify Playlists</h3>
+                  <p>Find the perfect soundtrack for your reading experience with curated playlists.</p>
+                  <div className="card-actions justify-end mt-4">
+                    <Link href="/spotify" style={{border: "2px solid #000000", color: "#000000"}} className="btn btn-primary">Browse Playlists</Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+                <div className="card-body">
+                  <h3 className="card-title text-primary">AI Powered Tools</h3>
+                  <p>Enhance your reading with an AI summariser, a pop culture hub and a community chatroom.</p>
+                  <div className="card-actions justify-end mt-4">
+                    {books.length > 0 ? (
+                      <div className="dropdown dropdown-end">
+                        <label tabIndex={0} style={{border: "2px solid #000000", color: "#000000"}} className="btn btn-primary">Select a Book</label>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+                          {books.map((book, idx) => (
+                            <li key={idx}>
+                              <Link href={`/book-features/${book.id}`}>
+                                {book.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <button disabled className="btn btn-primary">Add Books First</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

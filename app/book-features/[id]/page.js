@@ -30,7 +30,7 @@ export default function book({params}){
         <div data-theme="synthwave" className="min-h-screen p-8">
             <div className="max-w-5xl mx-auto">
                 <button 
-                    onClick={() => router.back()} 
+                    onClick={() => router.push("/")} 
                     className="flex items-center text-primary hover:text-primary-focus mb-6 transition-colors duration-200"
                 >
                    ← Back to Home
@@ -43,26 +43,26 @@ export default function book({params}){
                     </div>
                 ) : book ? (
                     <>
-                        <div className="mb-10 bg-base-100 rounded-xl shadow-xl overflow-hidden">
-                            <div className="bg-gradient-to-r from-primary to-secondary text-white py-6 px-8">
-                                <h1 className="text-4xl font-bold mb-2">{book.name}</h1>
-                                <h2 className="text-xl opacity-90 font-light">by {book.author}</h2>
+                        <div className="mb-6 bg-base-100 rounded-xl shadow-xl overflow-hidden">
+                            <div className="bg-gradient-to-r from-primary to-secondary text-white py-3 px-6">
+                                <h1 className="text-2xl font-bold mb-1">{book.name}</h1>
+                                <h2 className="text-base opacity-90 font-light">by {book.author}</h2>
                             </div>
-                            <div className="p-6">
-                                {book.description && (
-                                    <p className="mb-4 leading-relaxed">{book.description}</p>
-                                )}
-                                <div className="flex flex-wrap gap-3">
+                            <div className="p-4">
+                                <div className="flex flex-wrap gap-2">
                                     {book.genres?.map((genre, index) => (
-                                        <span key={index} className="badge badge-primary">
-                                            {genre}
+                                        <span 
+                                            key={genre.genreId} 
+                                            className="badge badge-primary"
+                                        >
+                                            {genre.genre.name}
                                         </span>
                                     ))}
                                 </div>
                             </div>
                         </div>
                         
-                        <h3 className="text-2xl font-bold text-primary mb-6 pl-2 border-l-4 border-primary">
+                        <h3 className="text-2xl font-bold text-primary mb-4 pl-2 border-l-4 border-primary">
                             Book Analysis Tools
                         </h3>
                         

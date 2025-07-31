@@ -2,6 +2,7 @@
 import socket from "../../components/socket";
 import {use, useState, useEffect, useRef} from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function chat({params}){
     // properly unwrap the params object using React.use()
@@ -14,6 +15,7 @@ export default function chat({params}){
     const userName = session?.user?.name;
     const messageContainerRef = useRef(null);
     const [book,setBook] = useState()
+    const router = useRouter()
 
     useEffect(() => {
         const fetchData = async() => { 
@@ -118,15 +120,39 @@ export default function chat({params}){
         const date = new Date(isoString);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+          e.preventDefault(); 
+          sendMessage();
+      }
+  };
     
     return (
         <div data-theme="synthwave" className="min-h-screen p-8">
           <div className="max-w-4xl mx-auto">
+            <button 
+                onClick={() => router.push(`/book-features/${bookId}`)}
+                className="flex items-center text-primary hover:text-primary-focus mb-6 transition-colors duration-200"
+            >
+                ← Back to Tools
+            </button>
             <h2 className="text-3xl font-bold mb-6 text-primary border-b border-primary pb-2">Community Chat for: {book?.name}</h2>
     
             <div 
               ref={messageContainerRef}
               className="h-[500px] overflow-y-scroll border p-4 rounded-lg mb-4 bg-base-100 shadow-xl" 
+              style={{
+                backgroundImage: `
+                    linear-gradient(
+                        rgba(0, 0, 0, 0.7), 
+                        rgba(0, 0, 0, 0.7)
+                    ),
+                    url('/chatbg.jpeg')
+                `,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
             >
               <div className="flex flex-col space-y-4 items-center">
                 {messages.map((msg) => {
@@ -161,7 +187,8 @@ export default function chat({params}){
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="border-0 p-2 flex-1 focus:ring-0 focus:outline-none bg-transparent"
+                onKeyPress={handleKeyPress}
+                className="border border-gray-300 p-2 flex-1 focus:ring-0 focus:outline-none bg-transparent rounded-lg"
                 placeholder="Type your message..."
               />
               <button
