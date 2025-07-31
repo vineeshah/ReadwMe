@@ -120,58 +120,60 @@ export default function chat({params}){
     };
     
     return (
-        <div className="p-4 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700 border-b pb-2">Community Chat for: {book?.name}</h2>
+        <div data-theme="synthwave" className="min-h-screen p-8">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold mb-6 text-primary border-b border-primary pb-2">Community Chat for: {book?.name}</h2>
     
-          <div 
-            ref={messageContainerRef}
-            className="h-[500px] overflow-y-scroll border p-4 rounded-lg mb-4 bg-gradient-to-b from-blue-50 to-white shadow-inner bg-opacity-90" 
-            style={{backgroundImage: "url('https://www.transparenttextures.com/patterns/paper.png')"}}>
-            <div className="flex flex-col space-y-4 items-center">
-              {messages.map((msg) => {
-                const isCurrentUser = msg.user.id === userId;
-                return (
-                  <div key={msg.id} className="w-full max-w-[85%] mx-auto">
-                    <div className={`flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'}`}>
-                      <div className={`font-semibold text-xs mb-1 px-2 ${
-                        isCurrentUser 
-                          ? 'text-blue-700' 
-                          : 'text-green-700'
-                      }`}>
-                        {isCurrentUser ? 'You' : msg.user.name}
-                      </div>
-                      <div className={`px-4 py-3 rounded-2xl shadow-sm max-w-[90%]
-                        ${isCurrentUser 
-                          ? 'bg-blue-600 text-white' 
-                          : 'bg-green-100 text-black border border-gray-200'}`}>
-                        <div className="break-words">{msg.text}</div>
-                        <div className={`text-xs mt-1 text-right ${isCurrentUser ? 'text-blue-200' : 'text-gray-600'}`}>
-                          {formatTime(msg.createdAt)}
+            <div 
+              ref={messageContainerRef}
+              className="h-[500px] overflow-y-scroll border p-4 rounded-lg mb-4 bg-base-100 shadow-xl" 
+            >
+              <div className="flex flex-col space-y-4 items-center">
+                {messages.map((msg) => {
+                  const isCurrentUser = msg.user.id === userId;
+                  return (
+                    <div key={msg.id} className="w-full max-w-[85%] mx-auto">
+                      <div className={`flex flex-col ${isCurrentUser ? 'items-end' : 'items-start'}`}>
+                        <div className={`font-semibold text-xs mb-1 px-2 ${
+                          isCurrentUser 
+                            ? 'text-primary' 
+                            : 'text-secondary'
+                        }`}>
+                          {isCurrentUser ? 'You' : msg.user.name}
+                        </div>
+                        <div className={`px-4 py-3 rounded-2xl shadow-sm max-w-[90%]
+                          ${isCurrentUser 
+                            ? 'bg-primary text-white' 
+                            : 'bg-secondary bg-opacity-20 text-white border border-secondary'}`}>
+                          <div className="break-words">{msg.text}</div>
+                          <div className={`text-xs mt-1 text-right ${isCurrentUser ? 'text-white text-opacity-70' : 'text-white text-opacity-70'}`}>
+                            {formatTime(msg.createdAt)}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
     
-          <div className="flex gap-2 items-center bg-white p-3 rounded-full shadow-md">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="border-0 p-2 flex-1 focus:ring-0 focus:outline-none bg-transparent text-black"
-              placeholder="Type your message..."
-            />
-            <button
-              onClick={sendMessage}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full shadow transition duration-150 ease-in-out flex items-center justify-center"
-            >
-              <span>Send</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
+            <div className="flex gap-2 items-center bg-base-100 p-3 rounded-full shadow-md">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="border-0 p-2 flex-1 focus:ring-0 focus:outline-none bg-transparent"
+                placeholder="Type your message..."
+              />
+              <button
+                onClick={sendMessage}
+                className="bg-primary hover:bg-primary-focus text-white px-5 py-2 rounded-full shadow transition duration-150 ease-in-out flex items-center justify-center"
+              >
+                <span>Send</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
     );

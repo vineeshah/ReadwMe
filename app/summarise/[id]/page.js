@@ -45,54 +45,56 @@ export default function summariser({params}){
     }
     
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-8">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Book Summarizer</h1>
-                    
-                    {book && (
-                        <div className="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                            <p className="text-lg">
-                                <span className="font-semibold text-blue-800">{book.name}</span>
-                                <span className="text-gray-700"> by {book.author}</span>
-                            </p>
-                        </div>
-                    )}
-                    
-                    <div className="mb-6">
-                        <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 mb-2">
-                            Ask anything about this book:
-                        </label>
-                        <textarea 
-                            id="prompt"
-                            rows="4"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
-                            onChange={(e) => setPrompt(e.target.value)} 
-                            placeholder="E.g., Summarize the main themes, Explain the character development..."
-                            value={prompt}
-                        />
-                    </div>
-                    
-                    <div className="flex justify-center">
-                        <button 
-                            onClick={() => handleSubmit(prompt)}
-                            disabled={loading}
-                            className={`px-6 py-2 rounded-md text-white font-medium ${
-                                loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all'
-                            } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
-                        >
-                            {loading ? "Analyzing..." : "Ask Away"}
-                        </button>
-                    </div>
-                    
-                    {response && (
-                        <div className="mt-10 animate-fade-in">
-                            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Response</h2>
-                            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-inner prose prose-black max-w-none text-black">
-                                <ReactMarkdown>{response}</ReactMarkdown>
+        <div data-theme="synthwave" className="min-h-screen p-8">
+            <div className="max-w-3xl mx-auto">
+                <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
+                    <div className="p-8">
+                        <h1 className="text-3xl font-bold text-primary mb-6 text-center">Book Summarizer</h1>
+                        
+                        {book && (
+                            <div className="mb-8 p-4 bg-base-200 rounded-lg border border-primary border-opacity-30">
+                                <p className="text-lg text-center">
+                                    <span className="font-semibold text-primary">{book.name}</span>
+                                    <span className="text-white"> by {book.author}</span>
+                                </p>
                             </div>
+                        )}
+                        
+                        <div className="mb-6">
+                            <label htmlFor="prompt" className="block text-sm font-medium text-white mb-2">
+                                Ask anything about this book:
+                            </label>
+                            <textarea 
+                                id="prompt"
+                                rows="4"
+                                className="w-full px-3 py-2 bg-base-300 text-white border border-primary border-opacity-30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                                onChange={(e) => setPrompt(e.target.value)} 
+                                placeholder="E.g., Summarize the main themes, Explain the character development..."
+                                value={prompt}
+                            />
                         </div>
-                    )}
+                        
+                        <div className="flex justify-center">
+                            <button 
+                                onClick={() => handleSubmit(prompt)}
+                                disabled={loading}
+                                className={`px-6 py-2 rounded-md text-white font-medium ${
+                                    loading ? 'bg-gray-600' : 'bg-primary hover:bg-primary-focus transform hover:scale-105 transition-all'
+                                } focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2`}
+                            >
+                                {loading ? "Analyzing..." : "Ask Away"}
+                            </button>
+                        </div>
+                        
+                        {response && (
+                            <div className="mt-10 animate-fade-in">
+                                <h2 className="text-2xl font-semibold text-secondary mb-4">Response</h2>
+                                <div className="bg-base-200 p-6 rounded-lg border border-secondary border-opacity-30 shadow-inner prose prose-invert max-w-none">
+                                    <ReactMarkdown>{response}</ReactMarkdown>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
