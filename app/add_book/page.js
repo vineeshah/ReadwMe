@@ -14,15 +14,16 @@ export default function AddBookPage() {
   const handleSearch = async (e) => {
     e.preventDefault();
     const isValid = await validbook({ name: name, author: author });
-    const genreData = await setGenres({
-      name: name,
-      author: author
-    });
+    
     // console.log("genreData:",genreData)
     // console.log("isvalid:",isValid)
 
   
     if (isValid === "Yes") {
+      const genreData = await setGenres({
+        name: name,
+        author: author
+      });
       setName(name.toLowerCase());
       setAuthor(author.toLowerCase());
   
@@ -126,6 +127,11 @@ export default function AddBookPage() {
         <div className="hero-content flex-col w-full max-w-2xl">
           <form onSubmit={handleSearch} className="card w-full bg-base-300 shadow-2xl rounded-lg border-2 border-primary p-10">
             <h2 className="text-3xl font-bold text-center text-secondary mb-8">Add a New Book</h2>
+            <div className=" bg-opacity-10 border-l-4 border-warning rounded-r px-4 py-2 mb-8">
+              <p className="text-warning text-sm">
+                ⚠️ Note: Book name and author must match exactly as published for successful addition
+              </p>
+            </div>
             
             <div className="mb-8">
               <label className="block font-semibold text-lg mb-3 text-accent">
