@@ -14,7 +14,7 @@ export default async function setGenres(data) {
     const model = new ChatGroq({
         model: "llama3-70b-8192",
         temperature: 0,
-        apiKey: "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",
+        apiKey: process.env.GROQ_API_KEY,
         // response_format: {
         //   type: "json_object",
         //   schema: {

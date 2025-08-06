@@ -155,7 +155,6 @@ export default function Spotify(){
             <div className="flex justify-between items-center mt-6 mb-10">
                 <h1 className="text-3xl font-bold text-primary font-extrabold">
                     Book Soundtrack Generator
-                    <div className="badge badge-secondary ml-4">Spotify Integration</div>
                 </h1>
             </div>
     
