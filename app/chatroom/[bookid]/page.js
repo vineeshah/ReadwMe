@@ -115,10 +115,24 @@ export default function chat({params}){
         setInput("");//after posting each message it returns to blank
     }
     
-    // Format timestamp to be more readable
+    // Format timestamp to be more readable - updated to include date
     const formatTime = (isoString) => {
         const date = new Date(isoString);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        // Format the time part
+        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Check if the date is today, yesterday, or another day
+        if (date.toDateString() === today.toDateString()) {
+            return `Today, ${timeStr}`;
+        } else if (date.toDateString() === yesterday.toDateString()) {
+            return `Yesterday, ${timeStr}`;
+        } else {
+            return `${date.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${timeStr}`;
+        }
     };
     const handleKeyPress = (e) => {
       if (e.key === 'Enter') {
@@ -136,7 +150,7 @@ export default function chat({params}){
             >
                 ← Back to Tools
             </button>
-            <h2 className="text-3xl font-bold mb-6 text-primary border-b border-primary pb-2">Community Chat for: {book?.name}</h2>
+            <h2 className="text-3xl font-bold mb-6 text-primary border-b border-primary pb-2 text-center">Community Chat for: {book?.name}</h2>
     
             <div 
               ref={messageContainerRef}

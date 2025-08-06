@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import validbook from "../components/validbook";
 import setGenres from "../components/setGenres";
 
-function AddBookPage() {
+export default function AddBookPage() {
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
   // const[genre, setGenre] = useState([])
@@ -165,6 +165,4 @@ function AddBookPage() {
     </div>
   );
 }
-
-export default AddBookPage;
 

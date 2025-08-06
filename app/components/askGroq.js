@@ -1,37 +1,26 @@
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { ChatGroq } from "@langchain/groq";
-
 export default async function askGroq(data) {
-  const userId = data.id;
-  const similarity = data.sim
-  const books = data.books
-
-
-
-    const model = new ChatGroq({
-        model: "llama3-70b-8192",
-        temperature: 0,
-        apiKey: process.env.GROQ_API_KEY
-    });
-
-  const messages = [
-    new SystemMessage(
-        "You are a book recommendation system. Provide exactly 10 book recommendations based on the user's reading history and requested similarity level. Format your response as a JSON array of objects, where each object has 'name' and 'author' fields. Example format: [{\"name\": \"Book Title\", \"author\": \"Author Name\"}]. Ensure similarity level (1-10) influences how closely the recommendations match the user's existing books in terms of genre and style. Make sure you dont keep recommending the same books for the highst and lowest level."
-    ),
-    new HumanMessage(
-        `Please recommend books with a similarity level of ${similarity} (where 10 means very similar and 1 means loosely similar) based on these books: ${JSON.stringify(books)}. Return only the JSON array.`
-    )
-  ];
+  const { id, sim, books } = data;
 
   try {
-    const response = await model.invoke(messages);
-    const books = JSON.parse(response.content)
-    if (!Array.isArray(books) || !books.every(book => book.name && book.author)) {
-        throw new Error('Invalid response format from AI');
+    const response = await fetch('/api/groq/askGroq', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        similarity: sim,
+        books: books
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
     }
-    return books;
+
+    const { recommendations } = await response.json();
+    return recommendations;
   } catch (error) {
-    console.error("Error validating book:", error);
-    return false; 
+    console.error("Error getting recommendations:", error);
+    return false;
   }
 }
