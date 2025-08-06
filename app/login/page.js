@@ -56,7 +56,7 @@ export default function LoginPage() {
       </div>
       
       <div className="mt-8 text-center text-gray-600 dark:text-gray-400">
-        <p>© 2023 ReadwMe. All rights reserved.</p>
+        <p>© 2025 ReadwMe. All rights reserved.</p>
       </div>
     </div>
   );

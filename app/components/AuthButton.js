@@ -9,7 +9,7 @@ export default function AuthButton({ }) {
   if (session) {
     return (
       <button
-        onClick={() => signOut()}
+        onClick={() => signOut({ callbackUrl: '/' })}
         className="px-6 py-3 bg-red-500 text-white rounded-lg text-lg font-medium shadow-md hover:bg-red-600 transition-all"
       >
         Sign Out
