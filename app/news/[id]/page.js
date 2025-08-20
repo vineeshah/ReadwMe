@@ -3,7 +3,7 @@ import { use, useState, useEffect } from "react";
 import { NextResponse } from "next/server";
 import { useRouter } from "next/navigation";
 
-export default function senti({params}){
+export default function Senti({params}){
     const [book, setBook] = useState(null)
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(false)

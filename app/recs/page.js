@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import askGroq from "../components/askGroq";
 import Link from "next/link";
 
-export default function recs(){
+export default function Recs(){
     const [recBooks, setRecBooks] = useState([])
     const [userBooks, setUserBooks] = useState([])
     const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +63,7 @@ export default function recs(){
         };
 
         fetchRecommendations();
-    }, [userId, useAskGroq, sim]);
+    }, [userId, useAskGroq, sim, userBooks]);
     
     return (
         <div data-theme="synthwave" className="min-h-screen p-8">

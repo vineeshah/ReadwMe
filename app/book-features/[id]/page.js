@@ -1,8 +1,9 @@
 "use client"
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-export default function book({params}){
+export default function Book({params}){
     const router = useRouter();
     const {id} = use(params); 
     const [book, setBook] = useState(null);
@@ -75,7 +76,7 @@ export default function book({params}){
                                     <div className="p-1 bg-primary w-full"></div>
                                     <div className="p-6 text-center">
                                         <div className="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <img
+                                            <Image
                                                 src="/summarise.jpeg" 
                                                 alt="Summarize"
                                                 className="w-full h-full object-cover rounded-full"
@@ -97,7 +98,7 @@ export default function book({params}){
                                     <div className="p-1 bg-secondary w-full"></div>
                                     <div className="p-6 text-center">
                                         <div className="w-16 h-16 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <img
+                                            <Image
                                                 src="/pop.jpeg" 
                                                 alt="Pop Culture Hub"
                                                 className="w-full h-full object-cover rounded-full"
@@ -119,7 +120,7 @@ export default function book({params}){
                                     <div className="p-6 text-center">
                                         <div className="w-16 h-16 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
                                             
-                                            <img
+                                            <Image
                                                 src="/chatroom.jpeg" 
                                                 alt="Chatroom"
                                                 className="w-full h-full object-cover rounded-full"

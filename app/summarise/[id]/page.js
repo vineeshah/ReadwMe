@@ -3,7 +3,7 @@ import {use, useEffect, useState } from "react";
 import ReactMarkdown from 'react-markdown';
 import { useRouter } from "next/navigation";
 
-export default function summariser({params}){
+export default function Summariser({params}){
     const {id} = use(params);
     const [book, setBook] = useState(null);
     const [prompt, setPrompt] = useState("")

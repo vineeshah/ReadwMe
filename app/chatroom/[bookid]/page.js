@@ -4,7 +4,7 @@ import {use, useState, useEffect, useRef} from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function chat({params}){
+export default function Chat({params}){
     // properly unwrap the params object using React.use()
     const resolvedParams = use(params);
     const bookId = resolvedParams.bookid; 
@@ -26,7 +26,7 @@ export default function chat({params}){
             setBook(data);
         };
         fetchData();   
-    }, [])
+    }, [bookId])
     
     //to scroll to bottom of the chat
     const scrollToBottom = () => {

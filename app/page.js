@@ -120,7 +120,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <h3 className="card-title">Intelligent Tracking</h3>
-                  <p>Easily catalog your books and track reading progress with our intuitive interface. Never lose track of what you've read again.</p>
+                  <p>Easily catalog your books and track reading progress with our intuitive interface. Never lose track of what you&apos;ve read again.</p>
                 </div>
                 <div className="card-actions justify-end p-4">
                   <div className="badge badge-outline">AI-Powered</div>
@@ -183,7 +183,7 @@ export default function Home() {
                 <div className="step step-primary">
                   <div className="step-circle">3</div>
                   <h3 className="mt-4 font-medium">Get Recommendations</h3>
-                  <p className="text-sm mt-2">Discover new books you'll love</p>
+                  <p className="text-sm mt-2">Discover new books you&apos;ll love</p>
                 </div>
                 <div className="step step-primary">
                   <div className="step-circle">4</div>
@@ -227,7 +227,7 @@ export default function Home() {
                   Do I need a Spotify account to use music features?
                 </div>
                 <div className="collapse-content"> 
-                  <p>Yes, to access the book-matched playlists feature, you'll need to connect your Spotify account. This allows us to generate playlists that match your book's mood and genre.</p>
+                  <p>Yes, to access the book-matched playlists feature, you&apos;ll need to connect your Spotify account. This allows us to generate playlists that match your book&apos;s mood and genre.</p>
                 </div>
               </div>
               

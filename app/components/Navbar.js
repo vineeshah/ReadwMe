@@ -3,6 +3,7 @@ import AuthButton from "./AuthButton";
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter();
@@ -16,8 +17,8 @@ export default function Navbar() {
     return (
       <nav data-theme="synthwave" className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <ul className="flex gap-4">
-          <li><a href="/" className="hover:underline">Home</a></li>
-          <li><a href="/recs" className="hover:underline">Recommendations</a></li>
+          <li><Link href="/" className="hover:underline">Home/</Link></li>
+          <li><Link href="/recs" className="hover:underline">Recommendations</Link></li>
         </ul>
         <div className="flex items-center gap-4 ">
         {!spotifyToken ? (
@@ -33,7 +34,7 @@ export default function Navbar() {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full flex items-center justify-center">
-              <img
+              <Image
                 src="/spotify-icon.svg" 
                 alt="Spotify Connected"
                 className="w-6 h-6"
@@ -55,7 +56,7 @@ export default function Navbar() {
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full flex items-center justify-center">
                 {/* User account icon */}
-                <img src={userImage} alt="User" />
+                <Image src={userImage} alt="User" />
               </div>
             </label>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 text-black">
@@ -82,7 +83,7 @@ export default function Navbar() {
     return(
       <nav data-theme="synthwave" className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <ul className="flex gap-4">
-          <li><a href="/" className="hover:underline">Home</a></li>
+          <li><Link href="/" className="hover:underline">Home</Link></li>
         </ul>
       </nav>
     );

@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect} from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function Account(){
     const[name, setName] = useState("")
@@ -41,7 +42,7 @@ export default function Account(){
             <div className="flex flex-col md:flex-row gap-10 mb-8">
                 {/* Profile Image Section */}
                 <div className="flex flex-col items-center space-y-3">
-                    <img 
+                    <Image 
                         src={userImage || "https://lh3.googleusercontent.com/a/ACg8ocLGWxJzDjxvQL5ISOisNnG6SPrMgic04qa7D4BxBVG2gdb2mQ=s96-"} 
                         alt="User Profile" 
                         className="w-24 h-24 rounded-full shadow-sm object-cover"

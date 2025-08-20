@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import spotifySearch from "../components/spotifySearch";
+import Image from "next/image";
 
 export default function Spotify(){
     const {data:session} = useSession()
@@ -51,7 +52,7 @@ export default function Spotify(){
 
         };
         refresh_token();
-    },[spotifyTokenExpiry, session?.user?.spotifyToken])
+    },[spotifyTokenExpiry, session?.user?.spotifyToken, accessToken, userId])
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -263,7 +264,7 @@ export default function Spotify(){
             ) : recommendations.length > 0 && (
                 <div className="mt-8">
                     <h2 className="text-xl font-bold mb-4">
-                        Reading Playlists for "{selectedBook?.name}"
+                        Reading Playlists for &quot;{selectedBook?.name}&quot;
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {recommendations.filter(playlist => playlist != null).map((playlist, index) => (
@@ -273,7 +274,7 @@ export default function Spotify(){
                                     ${index < 3 ? 'border-yellow-400' : ''}`}
                             >
                                 {playlist.images?.[0] && (
-                                    <img 
+                                    <Image 
                                         src={playlist.images[0].url}
                                         alt=""
                                         className="w-16 h-16 object-cover rounded-md"
