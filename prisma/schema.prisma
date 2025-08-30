@@ -9,19 +9,19 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String?
-  email         String?  @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  books         Book[]
-  messages      Message[]
-  spotifyToken  String?  
+  id                  String                @id @default(cuid())
+  name                String?
+  email               String?               @unique
+  emailVerified       DateTime?
+  image               String?
+  spotifyToken        String?
   spotifyRefreshToken String?
-  spotifyTokenExpiry DateTime?
-  genrePrefs    UserGenrePreference[]
+  spotifyTokenExpiry  DateTime?
+  accounts            Account[]
+  books               Book[]
+  messages            Message[]
+  sessions            Session[]
+  genrePrefs          UserGenrePreference[]
 }
 
 model Account {
@@ -37,8 +37,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id])
+  user              User    @relation(fields: [userId], references: [id])
 
   @@unique([provider, providerAccountId])
 }
@@ -48,8 +47,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model VerificationToken {
@@ -61,14 +59,15 @@ model VerificationToken {
 }
 
 model Book {
-  id           String   @id @default(cuid())
-  name         String
-  author       String
-  userId       String
-  publishDate  DateTime
-  genres       BookGenre[]
-  user User @relation(fields: [userId], references: [id])
+  id          String      @id @default(cuid())
+  name        String
+  author      String
+  userId      String
+  publishDate DateTime
+  user        User        @relation(fields: [userId], references: [id])
+  genres      BookGenre[]
 }
+
 model Message {
   id        String   @id @default(cuid())
   text      String
@@ -77,30 +76,30 @@ model Message {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 }
+
 model Genre {
-  id               Int                     @id @default(autoincrement())
-  name             String                   @unique
-  books            BookGenre[]
-  userPrefs        UserGenrePreference[]
+  id        Int                   @id @default(autoincrement())
+  name      String                @unique
+  books     BookGenre[]
+  userPrefs UserGenrePreference[]
 }
+
 model BookGenre {
-  bookId           String
-  genreId          Int
-  weight           Float                    @default(1.0)
+  bookId  String
+  genreId Int
+  weight  Float  @default(1.0)
+  book    Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  genre   Genre  @relation(fields: [genreId], references: [id])
 
-  book             Book                     @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  genre            Genre                    @relation(fields: [genreId], references: [id])
-
-  @@id([bookId, genreId]) 
+  @@id([bookId, genreId])
 }
 
 model UserGenrePreference {
-  userId           String
-  genreId          Int
-  weight           Float                    @default(1.0)
+  userId  String
+  genreId Int
+  weight  Float  @default(1.0)
+  genre   Genre  @relation(fields: [genreId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
 
-  user             User                     @relation(fields: [userId], references: [id])
-  genre            Genre                    @relation(fields: [genreId], references: [id])
-
-  @@id([userId, genreId]) 
+  @@id([userId, genreId])
 }
