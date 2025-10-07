@@ -18,6 +18,7 @@ export const authOptions = {
     ],
     callbacks: {
         async signIn({ user, account, profile }) {
+          console.log("Signin callback", { user, account, profile })
           // Allow all users
           return true;
         },
@@ -48,11 +49,20 @@ export const authOptions = {
     pages: {
         error: '/login',
     }, 
-    // events: {
-    //     error(message) {
-    //         console.error("NextAuth error:", message); 
-    //     },
-    // },
+    events: {
+      async signIn(message) {
+        console.log("Signin attempt", message)
+      },
+      async signOut(message) {
+        console.log("Signout", message)
+      },
+      async createUser(message) {
+        console.log("Create user", message)
+      },
+      async error(message) {
+        console.error("Error:", message)
+      }
+    },
     secret: process.env.NEXTAUTH_SECRET,
     debug: true,
 };
