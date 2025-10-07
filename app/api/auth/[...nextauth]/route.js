@@ -41,7 +41,7 @@ export const authOptions = {
             httpOnly: true,
             sameSite: "lax", // Use "lax" for cross-origin GET requests
             path: "/",
-            secure: false, 
+            secure: true, 
           },
         },
       },

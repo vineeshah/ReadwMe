@@ -115,3 +115,5 @@ export async function GET(request, {params}){
         })
     }
 }
+//DIRECT_URL="postgresql://postgres:fisjId-mogho9-xutqew@db.sygumziwurxkruptgskb.supabase.co:5432/postgres?sslmode=require"
+//DATABASE_URL="postgresql://postgres:fisjId-mogho9-xutqew@db.sygumziwurxkruptgskb.supabase.co:5432\/postgres?pgbouncer=true&connection_limit=1&pool_timeout=0&sslmode=require"
