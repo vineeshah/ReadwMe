@@ -1,3 +1,12 @@
+/**
+ * Request book recommendations from the Groq-backed `/api/groq/askGroq` route.
+ *
+ * @param {Object} data
+ * @param {string|number} [data.id] - Caller-supplied identifier (currently unused server-side).
+ * @param {number} data.sim - Similarity threshold forwarded to the model.
+ * @param {Array<Object>} data.books - Candidate books used as context for the prompt.
+ * @returns {Promise<Array<Object>|false>} Resolves with the recommendations array, or `false` if the request fails.
+ */
 export default async function askGroq(data) {
   const { id, sim, books } = data;
 
