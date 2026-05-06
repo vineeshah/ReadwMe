@@ -7,9 +7,11 @@ import setGenres from "../components/setGenres";
 export default function AddBookPage() {
   const [name, setName] = useState('');
   const [author, setAuthor] = useState('');
-  // const[genre, setGenre] = useState([])
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const { data: session } = useSession(); 
   const userId = session?.user?.id
+  const unusedValue = "this is never used"; 
 
   const handleSearch = async (e) => {
     e.preventDefault();

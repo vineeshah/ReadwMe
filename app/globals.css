@@ -41,7 +41,6 @@ a:hover {
   color: var(--secondary-color);
 }
 
-/* Add at the end of your globals.css file */
 .theme-synthwave {
   --primary: hsl(var(--p)) !important;
   --background: hsl(var(--b1)) !important;

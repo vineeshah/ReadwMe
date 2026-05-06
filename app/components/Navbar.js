@@ -11,9 +11,8 @@ export default function Navbar() {
   const {data:session, status} = useSession()
   const userImage = session?.user?.image;
   const spotifyToken = session?.user?.spotifyToken;
-  // console.log("spotifyToken: ",spotifyToken)
   
-  if(status=="authenticated"){
+  if(status==="authenticated"){
     return (
       <nav data-theme="synthwave" className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <ul className="flex gap-4">
@@ -55,7 +54,6 @@ export default function Navbar() {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full flex items-center justify-center">
-                {/* User account icon */}
                 <Image src={userImage} alt="User" />
               </div>
             </label>

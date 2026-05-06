@@ -7,7 +7,7 @@ export async function getAllBooks() {
   try {
     const session = await getServerSession(authOptions); 
     const userId = session?.user?.id;
-    console.log(userId)
+    
     const books = await prisma.book.findMany({
       where:{
         userId:userId
@@ -25,6 +25,7 @@ export async function getAllBooks() {
     });
     return books;
   } catch (error) {
+    console.error("Failed to fetch books:", error);
     throw new Error("Failed to fetch books");
   }
 }
@@ -41,6 +42,7 @@ export async function postABook(data) {
     });
     return newBook;
   } catch (error) {
-    console.log(error)
+    console.error("Failed to create book:", error);
+    throw new Error("Failed to create book");
   }
 }

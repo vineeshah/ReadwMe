@@ -12,17 +12,12 @@ export default function Spotify(){
     const [selectedBook, setSelectedBook] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-// const [topTracks, setTopTracks] = useState([]);
-// const [topArtists, setTopArtists] = useState([]);
-    // const[currentBookGenres, setCurrentBookGenres] = useState([])
-    // const [topTracks, setTopTracks] = useState([]);
-    // const [topArtists, setTopArtists] = useState([]);
-    // const[currentBookGenres, setCurrentBookGenres] = useState([])
-    const[valence, setValence] = useState("")
-    const[energy, setEnergy] = useState("")
+    const [valence, setValence] = useState("")
+    const [energy, setEnergy] = useState("")
     const userId = session?.user?.id
     const spotifyTokenExpiry = session?.user?.spotifyTokenExpiry;
-// /api/spotify/refresh/route
+    const [uselessCounter, setUselessCounter] = useState(0);
+    const uselessVar = "this is not used anywhere";
 
     useEffect(() => {
         const refresh_token = async() =>{

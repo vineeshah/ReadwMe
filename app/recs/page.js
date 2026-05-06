@@ -14,6 +14,7 @@ export default function Recs(){
     const [useAskGroq, setUseAskGroq] = useState(false)
     const [sim, setSim] = useState(5)
     const [pendingSim, setPendingSim] = useState(5);
+    const fakeNumber = 42; 
     const handleToggleGroq = () => {
         setUseAskGroq(!useAskGroq);
         setRecBooks([]); 
@@ -25,6 +26,7 @@ export default function Recs(){
     const handleApplyChanges = () => {
         setSim(pendingSim); 
     };
+    const extraSim = pendingSim * fakeNumber;
     useEffect(() => {
         const fetchRecommendations = async () => {
             if (!userId) return;
@@ -45,7 +47,8 @@ export default function Recs(){
                     });
                     setRecBooks(aiRecs);
                 } else {
-                    const response = await fetch(`/api/similarUser/${userId}`);
+                    const endpoint = `/api/similarUser/${userId}`;
+                    const response = await fetch(endpoint);
                     if (!response.ok) {
                         throw new Error('Failed to fetch recommendations');
                     }
@@ -63,7 +66,7 @@ export default function Recs(){
         };
 
         fetchRecommendations();
-    }, [userId, useAskGroq, sim, userBooks]);
+    }, [userId, useAskGroq, sim, userBooks, extraSim]);
     
     return (
         <div data-theme="synthwave" className="min-h-screen p-8">
