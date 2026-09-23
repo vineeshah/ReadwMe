@@ -9,6 +9,7 @@ export default function Chat({params}){
     const resolvedParams = use(params);
     const bookId = resolvedParams.bookid; 
     const [messages, setMessages] = useState([])
+    const [typingUser, setTypingUser] = useState(null)
     const [input, setInput] = useState("")
     const { data: session } = useSession();//to get current user and info just in case
     const userId = session?.user?.id;
@@ -58,6 +59,19 @@ export default function Chat({params}){
         };
         loadExistingMessages();
 
+        socket.on("message-edited", ({ id, text }) => {
+            setMessages(prev => prev.map(m => m.id === id ? { ...m, text } : m));
+        });
+
+        socket.on("message-deleted", ({ id }) => {
+            setMessages(prev => prev.filter(m => m.id !== id));
+        });
+
+        socket.on("user-typing", ({ userName }) => {
+            setTypingUser(userName);
+            setTimeout(() => setTypingUser(null), 3000);
+        });
+
         socket.on("chat-message", (msg) => {//for if someone sends a message, this stays active the entire time the component is mounted, and never stops listening for the messages getting posted
             console.log("Received message:", msg);
             setMessages((prev) => {
@@ -79,7 +93,10 @@ export default function Chat({params}){
         });
         //You need the return statement to cleanup which runs when: You navigate away from the page it’s on, You reload or replace it with another component.
         return () => {
-            socket.off("chat-message");//to avoid overlaoding even when you're not on this page
+            socket.off("chat-message");
+            socket.off("message-edited");
+            socket.off("message-deleted");
+            socket.off("user-typing");//to avoid overlaoding even when you're not on this page
             socket.off("error");
             socket.disconnect();
         };
@@ -185,7 +202,10 @@ export default function Chat({params}){
                           ${isCurrentUser 
                             ? 'bg-primary text-white' 
                             : 'bg-secondary bg-opacity-20 text-white border border-secondary'}`}>
-                          <div className="break-words">{msg.text}</div>
+                          <div
+                            className="break-words"
+                            dangerouslySetInnerHTML={{ __html: linkify(msg.text) }}
+                          />
                           <div className={`text-xs mt-1 text-right ${isCurrentUser ? 'text-white text-opacity-70' : 'text-white text-opacity-70'}`}>
                             {formatTime(msg.createdAt)}
                           </div>
@@ -200,10 +220,13 @@ export default function Chat({params}){
             <div className="flex gap-2 items-center bg-base-100 p-3 rounded-full shadow-md">
               <input
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  socket.emit("typing", { bookName: book?.name, userName });
+                }}
                 onKeyPress={handleKeyPress}
                 className="border border-gray-300 p-2 flex-1 focus:ring-0 focus:outline-none bg-transparent rounded-lg"
-                placeholder="Type your message..."
+                placeholder={typingUser ? `${typingUser} is typing...` : "Type your message..."}
               />
               <button
                 onClick={sendMessage}
@@ -218,4 +241,9 @@ export default function Chat({params}){
           </div>
         </div>
     );
+}
+
+// Turn bare URLs in a chat message into clickable links.
+function linkify(text) {
+    return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="link">$1</a>');
 }

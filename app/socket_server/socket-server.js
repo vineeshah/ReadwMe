@@ -2,6 +2,8 @@ import {createServer} from "http";
 import { Server } from "socket.io";
 import prisma from "../config/db.js";
 
+const MAX_MESSAGE_LENGTH = 2000;
+
 const httpserver = createServer()//everytime you call this route this server will be created fresh with no memory of past server, which diminishes everytime you ctrl+c 
 const io = new Server(httpserver, {//for conecting to a new server for websocket-ing
     cors : {
@@ -26,6 +28,9 @@ io.on("connection", (socket) => {
 
     socket.on("send-message", async({bookName,userId, text}) => {
         try{
+            if (text.length > MAX_MESSAGE_LENGTH) {
+                text = text.slice(0, MAX_MESSAGE_LENGTH - 1);
+            }
             const normalizedBookName = bookName.toLowerCase().replace(/[^a-z0-9]/g, "");
             console.log(normalizedBookName)
             const message = await prisma.message.create({
@@ -54,6 +59,36 @@ io.on("connection", (socket) => {
         }
         
     })
+
+    socket.on("typing", ({ bookName, userName }) => {
+        const normalizedBookName = bookName.toLowerCase().replace(/[^a-z0-9]/g, "");
+        io.to(`book-${normalizedBookName}`).emit("user-typing", { userName });
+    });
+
+    socket.on("edit-message", async ({ messageId, text }) => {
+        try {
+            const updated = await prisma.message.update({
+                where: { id: messageId },
+                data: { text },
+            });
+            io.to(`book-${updated.bookName}`).emit("message-edited", {
+                id: updated.id,
+                text: updated.text,
+            });
+        } catch (error) {
+            console.log("error editing message:", error);
+        }
+    });
+
+    socket.on("delete-message", async ({ messageId, userId }) => {
+        try {
+            const deleted = await prisma.message.delete({ where: { id: messageId } });
+            io.to(`book-${deleted.bookName}`).emit("message-deleted", { id: deleted.id });
+            console.log(`${userId} deleted message ${messageId}`);
+        } catch (error) {
+            console.log("error deleting message:", error);
+        }
+    });
 
     // socket.on("disconnect", () => {
     //     console.log("Client disconnected:", socket.id);
