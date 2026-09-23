@@ -23,3 +23,10 @@ This project is a modular backend and real-time communication system that powers
 1. Clone the repository.
 2. Set up your environment with the necessary dependencies.
 3. Run the app npm run dev!
+
+## API: Book search & pagination
+
+- `GET /api/requests/search?q=<text>&sort=<column>` — case-insensitive search across book names and authors (max 50 results).
+- `GET /api/messages?bookName=<name>&page=<n>&limit=<n>` — chat messages are now paginated. Response includes `page`, `total` and `hasMore`.
+- `DELETE /api/requests?id=<bookId>` — book id may now be passed as a query param.
+- `POST /api/summariser` is rate limited to 5 requests/minute per IP and caches identical prompts.

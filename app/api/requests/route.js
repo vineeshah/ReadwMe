@@ -37,12 +37,13 @@ export async function POST(request) {
 export async function PATCH(request){
     try{
         const body = await request.json()
-        
+        const { id, ...data } = body
+
         const updated = await prisma.book.update({
-            where : {id:body.id},
-            data : body,
+            where : { id },
+            data,
         })
-        return NextResponse.json(updated, { status: 201 }); 
+        return NextResponse.json(updated, { status: 200 });
     }catch (error) {
         console.log(error);
         return NextResponse.json(
@@ -51,20 +52,25 @@ export async function PATCH(request){
         );
     }
 }
+
+// DELETE /api/requests?id=<bookId>  (also accepts { id } in the body for older clients)
 export async function DELETE(request){
     try{
-        const body = await request.json()
-        const deleted = await prisma.book.delete({
-            where : {id:body.id},
+        const { searchParams } = new URL(request.url)
+        let id = searchParams.get("id")
+        if (!id) {
+            const body = await request.json()
+            id = body.id
+        }
+        const deleted = await prisma.book.deleteMany({
+            where : { OR: [{ id }, { name: id }] },
         })
-        return NextResponse.json(deleted, { status: 201 }); 
+        return NextResponse.json(deleted, { status: 200 });
     }catch (error) {
         console.log(error);
         return NextResponse.json(
           { error: "Failed to delete book in the requests" },
           { status: 500 }
         );
-      }
-
-    
+    }
 }
