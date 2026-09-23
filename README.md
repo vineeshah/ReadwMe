@@ -23,3 +23,11 @@ This project is a modular backend and real-time communication system that powers
 1. Clone the repository.
 2. Set up your environment with the necessary dependencies.
 3. Run the app npm run dev!
+
+## Chatroom features
+
+- Typing indicators ("<name> is typing...") broadcast to everyone in the room
+- Messages can be edited and deleted via the `edit-message` / `delete-message` socket events
+- URLs in messages are rendered as clickable links
+- Messages are capped at 2000 characters
+- Similar-user recommendations now use cosine similarity over genre weights

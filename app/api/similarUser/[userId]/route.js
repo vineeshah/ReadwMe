@@ -1,10 +1,11 @@
 import prisma from "@/app/config/db";
 import { NextResponse } from "next/server";
+import { cosineSimilarity } from "@/app/lib/similarity";
 
 export async function GET(request, {params}){
     const { userId } = params;
     const { searchParams } = new URL(request.url);
-    const limit = searchParams.get('limit') || 5;//option to change the limit of similarusers
+    const limit = parseInt(searchParams.get('limit')) || 5;//option to change the limit of similarusers
     try{
         const userPrefs = await prisma.user.findUnique({
             where:{
@@ -48,16 +49,7 @@ export async function GET(request, {params}){
 
         const similarityScore = {}
         for(const otherUser of similarUsers){
-            let userScore = 0;
-            for(const otherGenre of otherUser.genrePrefs){
-                const matchingGenre = userPrefs.genrePrefs.find(
-                    userGenre => userGenre.genre.name === otherGenre.genre.name
-                );
-                if(matchingGenre){
-                    userScore += matchingGenre.weight * otherGenre.weight
-                }
-            }
-            similarityScore[otherUser.id] = userScore;
+            similarityScore[otherUser.id] = cosineSimilarity(userPrefs.genrePrefs, otherUser.genrePrefs);
         };
         console.log("similarityScores", similarityScore)
         //now fetching the top 2 users with the highest similarity score
